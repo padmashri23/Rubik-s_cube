@@ -379,22 +379,4 @@ npx kill-port 5000
 - [ ] Mobile app (React Native)
 - [ ] Multiplayer challenges
 
-## 📝 License
-
-This project is **private and unpublished**. All rights reserved.
-
-For licensing inquiries, please contact the project maintainers.
-
-## 🤝 Contributing
-
-This is a private project. To suggest features or report bugs, please contact the maintainers directly.
-
-## 📧 Contact
-
-**Project Maintainer:** Padmashri  
-**Email:** padmashri23.tech@gmail.com  
-**GitHub:** [@padmashri23](https://github.com/padmashri23)
-
----
-
 **Made with ❤️ for Rubik's Cube enthusiasts and beginners worldwide.**
