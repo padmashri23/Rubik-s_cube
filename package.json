@@ -1,0 +1,19 @@
+{
+  "name": "cubeguide-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CubeGuide AI — a beginner-friendly Rubik's Cube coach. React + Three.js frontend and an Express API backend, sharing one cube-solving engine.",
+  "scripts": {
+    "install:all": "npm --prefix frontend install && npm --prefix backend install",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "build": "npm --prefix frontend run build && npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:backend": "npm --prefix backend run build",
+    "typecheck": "npm --prefix frontend run typecheck && npm --prefix backend run typecheck",
+    "test": "npm --prefix frontend test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

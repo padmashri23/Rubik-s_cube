@@ -1,0 +1,294 @@
+/* ============================================================================
+   CubeGuide AI — global design system
+   Dark, futuristic, glassmorphism + neon-blue accents.
+   Accessibility hooks live on <html data-*>: large-text, reduced-motion.
+   Colorblind palette is handled in the cube renderer via core/colors.
+   ========================================================================== */
+
+:root {
+  --bg: #05060f;
+  --bg-2: #0a0d1c;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --text: #eef2ff;
+  --text-dim: #aab2d5;
+  --text-faint: #6b7299;
+
+  --accent: #4f8cff;
+  --accent-2: #22d3ee;
+  --accent-glow: rgba(79, 140, 255, 0.45);
+  --good: #34d399;
+  --warn: #fbbf24;
+  --bad: #fb7185;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 0 1px var(--border), 0 18px 50px -12px var(--accent-glow);
+
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fs-base: 16px;
+
+  --maxw: 1240px;
+}
+
+html[data-large-text='true'] {
+  --fs-base: 19px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  color: var(--text);
+  background:
+    radial-gradient(1100px 700px at 80% -10%, rgba(79, 140, 255, 0.16), transparent 60%),
+    radial-gradient(900px 600px at 0% 100%, rgba(34, 211, 238, 0.12), transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+html[data-reduced-motion='true'] * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  color: inherit;
+  border: none;
+  background: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/* ---- reusable atoms ------------------------------------------------------ */
+
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: var(--shadow-soft);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+  color: #04122e;
+  box-shadow: 0 12px 30px -8px var(--accent-glow);
+}
+
+.btn-ghost {
+  background: transparent;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.gradient-text {
+  background: linear-gradient(120deg, #fff 10%, var(--accent) 55%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.visually-grid {
+  display: grid;
+  gap: 18px;
+}
+
+@media (max-width: 860px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* ---- app shell + header -------------------------------------------------- */
+
+.app-shell {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(5, 6, 15, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.app-header__inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 66px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1.12rem;
+  margin-right: auto;
+}
+
+.brand__mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: conic-gradient(from 210deg, #ef4444, #facc15, #22c55e, #3b82f6, #f97316, #ef4444);
+  box-shadow: 0 0 0 1px var(--border-strong), 0 6px 18px -6px var(--accent-glow);
+}
+
+.brand__ai {
+  color: var(--accent);
+}
+
+.app-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.app-nav__link {
+  padding: 8px 15px;
+  border-radius: 999px;
+  color: var(--text-dim);
+  font-weight: 550;
+  font-size: 0.95rem;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.app-nav__link:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.app-nav__link.is-active {
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.app-main {
+  flex: 1;
+  padding: 32px 0 80px;
+}
+
+.page-title {
+  font-size: clamp(1.8rem, 1.2rem + 2vw, 2.6rem);
+  margin-bottom: 6px;
+}
+
+.page-sub {
+  color: var(--text-dim);
+  margin-bottom: 28px;
+  max-width: 60ch;
+}
+
+@media (max-width: 720px) {
+  .app-nav__link {
+    padding: 8px 11px;
+    font-size: 0.86rem;
+  }
+  .brand__text {
+    display: none;
+  }
+}

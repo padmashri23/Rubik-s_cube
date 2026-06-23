@@ -1,0 +1,437 @@
+/* ============================================================================
+   ScannerPage — dark glassmorphism, neon-blue accents.
+   Two columns on desktop; stacked under 900px.
+   ========================================================================== */
+
+.scan {
+  padding-bottom: 40px;
+}
+
+.scan__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.scan__panel {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scan__panelhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.scan__h2 {
+  font-size: 1.15rem;
+}
+
+/* ---- step rail ----------------------------------------------------------- */
+
+.scan__steps {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin: 18px 0 22px;
+}
+
+.scan__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+}
+
+.scan__step:hover {
+  transform: translateY(-1px);
+  background: var(--surface-2);
+}
+
+.scan__step.is-current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 22px -10px var(--accent-glow);
+}
+
+.scan__step.is-done {
+  border-color: rgba(52, 211, 153, 0.45);
+}
+
+.scan__step-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: 1px solid var(--border-strong);
+}
+
+.scan__step-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.scan__step.is-current .scan__step-name {
+  color: var(--text);
+}
+
+.scan__step-check {
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  color: var(--good);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ---- target header ------------------------------------------------------- */
+
+.scan__target {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scan__target-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 2px solid var(--border-strong);
+  flex: 0 0 auto;
+}
+
+.scan__target-hold {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  margin-top: 2px;
+  max-width: 34ch;
+}
+
+/* ---- detected preview ---------------------------------------------------- */
+
+.scan__detected {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.scan__detected-label {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  max-width: 16ch;
+}
+
+.scan__detected-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 30px);
+  grid-template-rows: repeat(3, 30px);
+  gap: 4px;
+  margin-left: auto;
+}
+
+.scan__dcell {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.scan__dcell:hover {
+  transform: scale(1.1);
+}
+
+.scan__dcell.is-center {
+  cursor: default;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+}
+
+/* ---- camera -------------------------------------------------------------- */
+
+.scan__camera {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #02030a;
+  border: 1px solid var(--border);
+}
+
+.scan__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scan__overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  pointer-events: none;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(2, 3, 10, 0.35), 0 0 24px -4px var(--accent-glow);
+}
+
+.scan__cell {
+  border: 1px solid rgba(79, 140, 255, 0.55);
+}
+
+.scan__camerafallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  color: var(--text-dim);
+  background: rgba(5, 6, 15, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.scan__canvas {
+  display: none;
+}
+
+/* ---- face selector ------------------------------------------------------- */
+
+.scan__faces {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.scan__facebtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+}
+
+.scan__facebtn:hover {
+  transform: translateY(-1px);
+  background: var(--surface-2);
+}
+
+.scan__facebtn.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 22px -10px var(--accent-glow);
+}
+
+.scan__faceswatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid var(--border-strong);
+  flex: 0 0 auto;
+}
+
+.scan__facetext {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  font-weight: 600;
+  text-align: left;
+}
+
+.scan__facetext small {
+  color: var(--text-dim);
+  font-weight: 500;
+  font-size: 0.72rem;
+}
+
+.scan__facedone {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  color: var(--good);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.scan__hint {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  min-height: 1.2em;
+}
+
+.scan__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.scan__tips {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-faint);
+  font-size: 0.82rem;
+}
+
+.scan__tips li {
+  padding-left: 16px;
+  position: relative;
+}
+
+.scan__tips li::before {
+  content: '›';
+  position: absolute;
+  left: 2px;
+  color: var(--accent);
+}
+
+/* ---- manual editor ------------------------------------------------------- */
+
+.scan__scramble {
+  padding: 9px 16px;
+  font-size: 0.85rem;
+}
+
+.scan__palette {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.scan__swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 2px solid var(--border-strong);
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+
+.scan__swatch:hover {
+  transform: translateY(-2px);
+}
+
+.scan__swatch.is-active {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px var(--accent), 0 8px 20px -8px var(--accent-glow);
+}
+
+.scan__paletteactive {
+  margin-left: auto;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.scan__net {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.scan__nethint {
+  color: var(--text-faint);
+  font-size: 0.82rem;
+}
+
+/* ---- validation + cta ---------------------------------------------------- */
+
+.scan__validate {
+  margin-top: 22px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+}
+
+.scan__validate--ok {
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.35), var(--shadow-soft);
+}
+
+.scan__validate--bad {
+  border-color: rgba(251, 113, 133, 0.5);
+  box-shadow: 0 0 0 1px rgba(251, 113, 133, 0.3), var(--shadow-soft);
+}
+
+.scan__validmsg {
+  color: var(--good);
+  font-weight: 600;
+}
+
+.scan__errors {
+  color: var(--bad);
+}
+
+.scan__errors strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.scan__errors ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.scan__errors li::before {
+  content: '• ';
+  color: var(--bad);
+}
+
+.scan__cta {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.scan__generate {
+  font-size: 1.02rem;
+  padding: 15px 28px;
+}
+
+.scan__ctahint {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+/* ---- responsive ---------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .scan__grid {
+    grid-template-columns: 1fr;
+  }
+  .scan__paletteactive {
+    margin-left: 0;
+    width: 100%;
+  }
+}

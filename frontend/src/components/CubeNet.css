@@ -1,0 +1,57 @@
+.cube-net {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  grid-template-rows: repeat(3, max-content);
+  gap: 6px;
+  width: max-content;
+}
+
+.cube-net__face {
+  display: grid;
+  grid-template-columns: repeat(3, var(--sticker, 26px));
+  grid-template-rows: repeat(3, var(--sticker, 26px));
+  gap: 3px;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+}
+
+.cube-net__btn {
+  display: block;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+button.cube-net__btn {
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+button.cube-net__btn:hover {
+  transform: scale(1.08);
+}
+
+.cube-net__cell {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.cube-net__cell[data-center='true'] {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55);
+}
+
+.cube-net__cell[data-flagged='true'] {
+  box-shadow: 0 0 0 2px #fb7185, 0 0 10px 1px rgba(251, 113, 133, 0.8);
+  animation: cube-net-flag 1.1s ease-in-out infinite;
+}
+
+@keyframes cube-net-flag {
+  0%, 100% { box-shadow: 0 0 0 2px #fb7185, 0 0 10px 1px rgba(251, 113, 133, 0.55); }
+  50% { box-shadow: 0 0 0 3px #fb7185, 0 0 16px 3px rgba(251, 113, 133, 0.95); }
+}

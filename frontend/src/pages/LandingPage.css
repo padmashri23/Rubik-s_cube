@@ -1,0 +1,336 @@
+/* ============================================================================
+   LandingPage — CubeGuide AI front door.
+   Dark futuristic glassmorphism, neon-blue accents. Builds on global atoms
+   (container, glass, btn, chip, gradient-text, page-title). Custom classes are
+   prefixed `land__`.
+   ========================================================================== */
+
+.land {
+  padding-bottom: 40px;
+}
+
+/* ---- Hero ----------------------------------------------------------------- */
+
+.land__hero {
+  position: relative;
+  padding: 56px 0 24px;
+  overflow: hidden;
+}
+
+.land__hero::before {
+  content: '';
+  position: absolute;
+  inset: -20% 0 auto 0;
+  height: 520px;
+  background:
+    radial-gradient(620px 360px at 78% 12%, rgba(79, 140, 255, 0.22), transparent 60%),
+    radial-gradient(520px 320px at 8% 30%, rgba(34, 211, 238, 0.14), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.land__hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: 48px;
+}
+
+.land__hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.land__eyebrow {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.land__headline {
+  font-size: clamp(2.4rem, 1.4rem + 4vw, 4.1rem);
+  line-height: 1.04;
+  margin: 0;
+}
+
+.land__subhead {
+  font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.3rem);
+  color: var(--text-dim);
+  max-width: 34ch;
+  margin: 0;
+}
+
+.land__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.land__cta-row .btn {
+  padding: 15px 26px;
+  font-size: 1.02rem;
+}
+
+.land__trust {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin: 4px 0 0;
+  padding: 0;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+}
+
+.land__trust li {
+  position: relative;
+  padding-left: 20px;
+}
+
+.land__trust li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+/* hero cube panel */
+.land__hero-cube {
+  position: relative;
+  padding: 14px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(79, 140, 255, 0.12), transparent 70%),
+    var(--surface);
+}
+
+.land__hero-cube :global(canvas),
+.land__hero-cube canvas {
+  border-radius: calc(var(--radius) - 6px);
+}
+
+.land__hero-tag {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  font-weight: 600;
+  background: rgba(5, 6, 15, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* ---- Section scaffolding -------------------------------------------------- */
+
+.land__block {
+  margin-top: 72px;
+}
+
+.land__section-title {
+  margin-bottom: 8px;
+}
+
+.land__section-sub {
+  color: var(--text-dim);
+  max-width: 56ch;
+  margin: 0 0 30px;
+}
+
+/* ---- Feature grid --------------------------------------------------------- */
+
+.land__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.land__card {
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.land__card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-glow);
+}
+
+.land__card-icon {
+  font-size: 1.9rem;
+  line-height: 1;
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.18), rgba(34, 211, 238, 0.12));
+  border: 1px solid var(--border);
+}
+
+.land__card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 1.12rem;
+}
+
+.land__card-badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-2);
+  border-color: rgba(34, 211, 238, 0.4);
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.land__card-body {
+  color: var(--text-dim);
+  font-size: 0.96rem;
+  margin: 0;
+}
+
+/* ---- How it works --------------------------------------------------------- */
+
+.land__steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  counter-reset: land-step;
+}
+
+.land__step {
+  position: relative;
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.land__step::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  opacity: 0.8;
+}
+
+.land__step-num {
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #04122e;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 10px 24px -10px var(--accent-glow);
+}
+
+.land__step-title {
+  font-size: 1.15rem;
+}
+
+.land__step-body {
+  color: var(--text-dim);
+  font-size: 0.96rem;
+  margin: 0;
+}
+
+/* ---- Footer CTA band ------------------------------------------------------ */
+
+.land__cta-band {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 40px 44px;
+  overflow: hidden;
+  background:
+    radial-gradient(140% 160% at 0% 0%, rgba(79, 140, 255, 0.18), transparent 55%),
+    radial-gradient(140% 160% at 100% 100%, rgba(34, 211, 238, 0.16), transparent 55%),
+    var(--surface);
+  border-color: var(--border-strong);
+}
+
+.land__cta-band-copy {
+  max-width: 60ch;
+}
+
+.land__cta-title {
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.3rem);
+  margin-bottom: 8px;
+}
+
+.land__cta-text {
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.land__cta-btn {
+  flex-shrink: 0;
+  padding: 16px 30px;
+  font-size: 1.05rem;
+}
+
+/* ---- Responsive ----------------------------------------------------------- */
+
+@media (max-width: 1040px) {
+  .land__grid,
+  .land__steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .land__hero {
+    padding-top: 36px;
+  }
+  .land__hero-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .land__hero-copy {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .land__subhead {
+    max-width: none;
+  }
+  .land__hero-cube {
+    order: -1;
+  }
+  .land__cta-band {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px 26px;
+  }
+}
+
+@media (max-width: 620px) {
+  .land__grid,
+  .land__steps {
+    grid-template-columns: 1fr;
+  }
+  .land__cta-row {
+    width: 100%;
+  }
+  .land__cta-row .btn {
+    flex: 1;
+  }
+}

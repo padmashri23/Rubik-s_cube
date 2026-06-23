@@ -1,0 +1,248 @@
+/* ============================================================================
+   SettingsButton — gear trigger + glassmorphism settings drawer.
+   Custom classes are prefixed `settings__` to avoid collisions with the
+   global design atoms (.glass, .btn, .chip, ...).
+   ========================================================================== */
+
+.settings__trigger {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.settings__gear {
+  display: inline-block;
+  transition: transform 0.4s ease;
+}
+
+.settings__trigger:hover .settings__gear,
+.settings__trigger[aria-expanded='true'] .settings__gear {
+  transform: rotate(90deg);
+}
+
+/* ---- backdrop + panel ---------------------------------------------------- */
+
+.settings__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(3, 4, 12, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Explicitly pinned to the right edge (not flex) so it can never overflow the
+   viewport, and higher specificity than `.glass` so it's a solid opaque panel
+   instead of the near-transparent glass atom. */
+.settings__backdrop .settings__panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(440px, 100vw);
+  max-width: 100vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius) 0 0 var(--radius);
+  border: 1px solid var(--border-strong);
+  border-right: none;
+  outline: none;
+  background: linear-gradient(180deg, #0d1426 0%, #080b18 100%);
+  box-shadow: -30px 0 70px -24px rgba(0, 0, 0, 0.75);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (max-width: 480px) {
+  .settings__backdrop .settings__panel {
+    width: 100vw;
+    border-radius: 0;
+    border-left: none;
+  }
+}
+
+/* ---- header -------------------------------------------------------------- */
+
+.settings__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings__title {
+  font-size: 1.25rem;
+}
+
+.settings__close {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  color: var(--text-dim);
+}
+
+.settings__close:hover {
+  color: var(--text);
+}
+
+/* ---- body ---------------------------------------------------------------- */
+
+.settings__body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 22px 28px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.settings__body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.settings__body::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+.settings__section + .settings__section {
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.settings__section-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+
+/* ---- rows ---------------------------------------------------------------- */
+
+.settings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.settings__row + .settings__row {
+  border-top: 1px solid var(--border);
+}
+
+.settings__row--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.settings__row-text {
+  min-width: 0;
+}
+
+.settings__row-label {
+  display: block;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.settings__row-note {
+  margin-top: 3px;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+/* ---- toggle switch ------------------------------------------------------- */
+
+.settings__switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 50px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.settings__switch.is-on {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+}
+
+.settings__switch:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.settings__switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.settings__switch.is-on .settings__switch-thumb {
+  transform: translateX(22px);
+}
+
+/* ---- range --------------------------------------------------------------- */
+
+.settings__range {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.settings__range input[type='range'] {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.settings__range input[type='range']:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settings__range-value {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+/* ---- hint ---------------------------------------------------------------- */
+
+.settings__hint {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm, 12px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.84rem;
+  color: var(--text-dim);
+  line-height: 1.45;
+}

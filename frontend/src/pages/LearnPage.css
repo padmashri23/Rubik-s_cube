@@ -1,0 +1,255 @@
+/* ============================================================================
+   LearnPage — beginner Layer-By-Layer primer.
+   Dark glassmorphism + neon-blue, building on the global design atoms.
+   ========================================================================== */
+
+.learn {
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+  max-width: 880px;
+}
+
+.learn__head {
+  margin-bottom: 1.75rem;
+}
+
+/* --- progress overview ----------------------------------------------------- */
+
+.learn__progress {
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.learn__progress-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.learn__progress-label {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.learn__progress-label strong {
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.learn__progress-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.learn__progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 18px var(--accent-glow);
+}
+
+/* --- accordion list -------------------------------------------------------- */
+
+.learn__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+}
+
+.learn__item {
+  padding: 0;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.learn__item[data-done='true'] {
+  border-color: rgba(52, 211, 153, 0.4);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.25);
+}
+
+.learn__heading {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.learn__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.05rem 1.25rem;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.learn__trigger:hover {
+  background: var(--surface);
+}
+
+.learn__trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.learn__index {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-2);
+}
+
+.learn__item[data-done='true'] .learn__index {
+  background: rgba(52, 211, 153, 0.16);
+  border-color: rgba(52, 211, 153, 0.45);
+  color: var(--good);
+}
+
+.learn__title {
+  flex: 1 1 auto;
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+
+.learn__badge {
+  background: rgba(52, 211, 153, 0.16);
+  border-color: rgba(52, 211, 153, 0.4);
+  color: var(--good);
+}
+
+.learn__chevron {
+  flex: 0 0 auto;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--text-dim);
+  transition: transform 0.25s ease;
+}
+
+.learn__chevron[data-open='true'] {
+  transform: rotate(180deg);
+}
+
+/* --- expanded panel -------------------------------------------------------- */
+
+.learn__panel {
+  overflow: hidden;
+}
+
+.learn__panel-inner {
+  padding: 0 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.1rem;
+}
+
+.learn__explain {
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+.learn__cube {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #05060f;
+}
+
+.learn__cube-cap {
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+  color: var(--text-faint);
+  border-top: 1px solid var(--border);
+}
+
+.learn__callout {
+  position: relative;
+  padding: 0.9rem 1.1rem 0.9rem 1.1rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    rgba(79, 140, 255, 0.14),
+    rgba(34, 211, 238, 0.08)
+  );
+  border: 1px solid rgba(79, 140, 255, 0.35);
+}
+
+.learn__callout-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin-bottom: 0.3rem;
+}
+
+.learn__callout p {
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.learn__tips {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+}
+
+.learn__tips li::marker {
+  color: var(--accent);
+}
+
+/* --- final call to action -------------------------------------------------- */
+
+.learn__cta {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.learn__cta-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.learn__cta-btn {
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .learn__cta {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .learn__cta-btn {
+    width: 100%;
+  }
+}
