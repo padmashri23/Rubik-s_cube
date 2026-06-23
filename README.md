@@ -1,382 +1,331 @@
-# 🧩 CubeGuide AI — Rubik's Cube Solver
+<div align="center">
 
-[![Node Version](https://img.shields.io/badge/node->=18-green.svg)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6+-blue.svg)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](#license)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:4f8cff,100:22d3ee&height=210&section=header&text=CubeGuide%20AI&fontSize=62&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Your%20friendly%20AI%20Rubik's%20Cube%20coach&descAlignY=60&descSize=18" width="100%" alt="CubeGuide AI" />
 
-A **beginner-friendly Rubik's Cube coach** that guides anyone to solve a 3×3 cube using their camera, a 3D visualization, and a voice tutor. No cube notation required.
+<p>
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=800&color=4F8CFF&center=true&vCenter=true&width=620&lines=Scan+your+cube+with+the+camera;Follow+plain-language+steps;No+cube+notation+required;Learn+while+you+solve" alt="Typing tagline" />
+</p>
 
-Scan your scrambled cube with your device's camera, and the AI will provide **step-by-step guidance** with plain-language instructions, animated 3D demonstrations, and optional voice coaching. Built for learning, not just solving.
+[![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6+-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Three.js](https://img.shields.io/badge/Three.js-0.169-000000?logo=three.js&logoColor=white)](https://threejs.org/)
+[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-lightgrey.svg)](#-license)
+
+<img src="https://skillicons.dev/icons?i=react,ts,threejs,vite,nodejs,express" alt="Tech stack" />
+
+</div>
+
+---
+
+A **beginner-friendly Rubik's Cube coach** that guides anyone to solve a 3×3 cube using their
+camera, a 3D visualization, and a voice tutor — **no cube notation required**.
+
+Scan your scrambled cube, and CubeGuide provides **step-by-step guidance** with plain-language
+instructions ("turn the right side up"), an animated 3D cube, and optional voice coaching. Built
+for *learning*, not just solving.
 
 ## ✨ Features
 
-- 📷 **Camera Scanner** — Real-time cube detection with HSV color calibration
-- 🎯 **Layer-by-Layer Solver** — Beginner-friendly solution algorithm
-- 🗣️ **Voice Assistant** — Text-to-speech coaching (Web Speech API)
-- 🎨 **3D Visualization** — Interactive 3D cube with Three.js
-- ♿ **Accessibility** — Colorblind modes, large text, reduced motion
-- 📊 **Progress Dashboard** — Track solve attempts and statistics
-- ⚡ **Offline Support** — Frontend works completely offline
-- 🔌 **REST API** — Backend available for third-party integrations
-- ✅ **Impossible Cube Detection** — Validates scrambles and pinpoints errors
+- 📷 **Camera Scanner** — face-by-face capture with **HSV + center-calibrated** color detection
+- 🎯 **Layer-by-Layer Solver** — a correct-by-construction beginner solving engine
+- 🗣️ **Voice Assistant** — text-to-speech coaching + hands-free commands (Web Speech API)
+- 🎨 **3D Visualization** — interactive, animated cube with Three.js / react-three-fiber
+- ✅ **Impossible-Cube Detection** — validates scans and **pinpoints the exact bad stickers**
+- ♿ **Accessibility** — colorblind palette, large text, reduced motion
+- 📊 **Progress Dashboard** — XP, levels, streaks and achievements
+- ⚡ **Offline-first** — the solver runs entirely in the browser
+- 🔌 **REST API** — the same engine exposed over HTTP for other clients
 
 ## 🏗️ Project Structure
 
-The project uses a **shared cube engine** architecture: both the web client and API use the same solver, ensuring they always agree on solutions.
+Both the web client and the API use **one shared cube engine**, so they always agree on what's
+solvable and how to solve it.
 
 ```
 Cube_Solver/
 ├── frontend/                    React + TypeScript + Vite web app
 │   ├── src/
-│   │   ├── core/               ← Shared cube engine (moves, solver, validation)
-│   │   │   ├── cube.ts         Cube state representation
-│   │   │   ├── moves.ts        All 18 cube moves (U, R, F, D, L, B + modifiers)
-│   │   │   ├── solver.ts       Layer-by-layer solving algorithm
-│   │   │   ├── notation.ts     Cube notation parser
-│   │   │   └── colors.ts       Color definitions
-│   │   ├── components/         React components
-│   │   │   ├── Cube3D.tsx      Three.js 3D cube renderer
-│   │   │   ├── CubeNet.tsx     2D cube net visualization
-│   │   │   ├── SettingsButton.tsx
-│   │   │   └── ErrorBoundary.tsx
-│   │   ├── pages/              Page components
-│   │   │   ├── LandingPage.tsx
-│   │   │   ├── ScannerPage.tsx
-│   │   │   ├── SolvePage.tsx
-│   │   │   ├── LearnPage.tsx
-│   │   │   └── DashboardPage.tsx
-│   │   ├── lib/                Utilities
-│   │   │   ├── colorDetect.ts  HSV-based color detection
-│   │   │   ├── voice.ts        Web Speech API wrapper
-│   │   │   └── steps.ts        Solution step formatting
-│   │   ├── state/              Zustand store
-│   │   └── styles/             Global CSS
+│   │   ├── core/                ← Shared cube engine (pure, framework-free TS)
+│   │   │   ├── moves.ts         Geometric move engine (all 18 moves) + notation parser
+│   │   │   ├── cube.ts          Cube state model + solvability validation
+│   │   │   ├── solver.ts        Layer-by-layer solving algorithm
+│   │   │   ├── notation.ts      Plain-language instruction generator
+│   │   │   └── colors.ts        Color scheme + colorblind palette
+│   │   ├── components/          Cube3D, CubeNet, SettingsButton, ErrorBoundary
+│   │   ├── pages/               Landing, Scanner, Solve, Learn, Dashboard
+│   │   ├── lib/                 colorDetect (HSV), voice (Web Speech), steps
+│   │   ├── state/               Zustand store
+│   │   └── styles/              Global CSS (design system)
 │   └── package.json
 │
 ├── backend/                     Express + TypeScript REST API
 │   ├── src/
-│   │   ├── index.ts            Server entry point
-│   │   ├── engine.ts           Re-exports frontend/src/core
+│   │   ├── index.ts             Server entry point
+│   │   ├── engine.ts            Re-exports frontend/src/core (single source of truth)
 │   │   └── routes/
-│   │       ├── health.ts       GET /api/health
-│   │       └── solve.ts        POST /api/solve, GET /api/scramble
-│   ├── dist/                   Built output (bundled)
+│   │       ├── health.ts        GET  /api/health
+│   │       └── solve.ts         POST /api/solve, GET /api/scramble
 │   └── package.json
 │
-├── package.json                Root orchestrator (npm workspace scripts)
+├── package.json                 Root orchestrator scripts (npm --prefix; no workspaces)
+├── README.md
 └── .gitignore
 ```
 
-**Why the engine lives in `frontend/src/core`:**  
-It's pure, framework-free TypeScript. The backend imports it directly (bundled by esbuild), ensuring there's never a second copy of the solver to drift out of sync.
+> **Why the engine lives in `frontend/src/core`:** it's pure, framework-free TypeScript. The
+> backend imports it directly (bundled by esbuild / run by tsx), so there's never a second copy
+> of the solver to drift out of sync.
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Node.js** ≥ 18 ([Download](https://nodejs.org/))
-- **npm** 9+ (comes with Node)
+- **Node.js** ≥ 18 ([download](https://nodejs.org/)) · **npm** 9+ (ships with Node)
 
 ### Installation & Running
 
 ```bash
-# 1. Clone the repository
+# 1. Clone
 git clone https://github.com/padmashri23/Rubik-s_cube.git
-cd Cube_Solver
+cd Rubik-s_cube
 
-# 2. Install dependencies for both frontend and backend
+# 2. Install both apps
 npm run install:all
 
-# 3. In one terminal, start the frontend (http://localhost:5173)
+# 3. Terminal A — web app  → http://localhost:5173
 npm run dev:frontend
 
-# 4. In another terminal, start the backend API (http://localhost:5000)
+# 4. Terminal B — API      → http://localhost:5000   (optional)
 npm run dev:backend
 ```
 
-**That's it!** Open [http://localhost:5173](http://localhost:5173) in your browser and start solving.
+Open **http://localhost:5173** and start solving.
 
-> **Note:** Camera access requires `localhost` or `HTTPS`. The frontend works **fully offline**; the backend is optional for API integrations.
+> 📸 Camera access requires `localhost` or `HTTPS`. The frontend works **fully offline** — the
+> backend is optional and only needed for API integrations.
 
 ## 🎮 Usage
 
-### Web Application (Frontend)
+The web app has five sections: **Landing** (overview) · **Scanner** (capture your cube) ·
+**Solve** (turn-by-turn coaching) · **Learn** (lessons) · **Dashboard** (progress).
 
-The React frontend provides:
+### Frontend commands (`cd frontend`)
 
-1. **Landing Page** — Overview and instructions
-2. **Scanner** — Scan your cube with your camera
-3. **Solver** — Follow step-by-step guidance
-4. **Learn** — Interactive tutorial
-5. **Dashboard** — Track your progress
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Dev server with HMR (port 5173) |
+| `npm run build` | Type-check (`tsc -b`) + production build |
+| `npm run preview` | Preview the production build |
+| `npm test` | Run the test suites (Vitest) |
+| `npm run test:watch` | Tests in watch mode |
+| `npm run typecheck` | Type-check only |
 
-#### Available Commands
+**Tech:** React 18 · TypeScript · Vite · Three.js + react-three-fiber · Framer Motion · Zustand · Vitest.
 
-```bash
-cd frontend
+### Backend commands (`cd backend`)
 
-npm run dev              # Dev server with HMR (port 5173)
-npm run build           # Type-check + production build
-npm run preview         # Preview production build locally
-npm test                # Run test suite (Vitest)
-npm run typecheck       # TypeScript type-checking only
-npm run lint            # ESLint + Prettier
-```
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Watch + run the API (port 5000, via tsx) |
+| `npm run build` | Type-check + bundle to `dist/index.js` (esbuild) |
+| `npm start` | Run the bundled server |
+| `npm run typecheck` | Type-check only |
 
-#### Tech Stack
+**Tech:** Node · Express · TypeScript · esbuild · tsx.
 
-- **React 18** — UI framework
-- **TypeScript** — Type safety
-- **Vite** — Build tool (instant HMR)
-- **Three.js** + **react-three-fiber** — 3D rendering
-- **Framer Motion** — Animations
-- **Zustand** — State management
-- **Vitest** — Unit testing
+## 🔌 REST API
 
-### REST API (Backend)
+> Base URL: `http://localhost:5000`. All responses are JSON with an `ok` boolean.
 
-The Express backend exposes three endpoints:
+<details open>
+<summary><b>GET <code>/api/health</code></b> — liveness probe</summary>
 
-#### 1. Health Check
-```bash
-GET /api/health
-```
-**Response:**
 ```json
-{ "ok": true }
+{ "ok": true, "service": "cubeguide-backend", "version": "0.1.0", "uptime": 12.34 }
 ```
+</details>
 
-#### 2. Generate Random Solvable Cube
-```bash
-GET /api/scramble?n=22&seed=3
-```
+<details>
+<summary><b>GET <code>/api/scramble?n=22&seed=3</code></b> — a random <i>solvable</i> cube</summary>
 
-**Query Parameters:**
-- `n` (optional) — Scramble depth in moves (default: 22)
-- `seed` (optional) — Random seed for reproducibility
+**Query:** `n` = scramble depth (1–40, default 22) · `seed` = optional, for reproducibility.
 
-**Response:**
-```json
-{
-  "state": "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB",
-  "moves": ["R", "U", "R'", "U'", ...]
-}
-```
-
-#### 3. Solve a Cube
-```bash
-POST /api/solve
-Content-Type: application/json
-
-{
-  "state": "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB"
-}
-```
-
-**Cube State Format:**  
-54 facelets in order **U R F D L B** (row-major), using letters `U R F D L B` as color IDs:
-- Positions 0–8: Top face (U)
-- Positions 9–17: Right face (R)
-- Positions 18–26: Front face (F)
-- Positions 27–35: Down face (D)
-- Positions 36–44: Left face (L)
-- Positions 45–53: Back face (B)
-
-**Success Response (200):**
 ```json
 {
   "ok": true,
+  "state": "BBRDURLDLUBBRRLRRRFLUUFUDDDBBBLDFFFFDFRRLFLBUFUUDBUDLL",
+  "scramble": ["F2", "B", "R'", "D'", "L", "D2", "U", "F2"],
+  "seed": 3
+}
+```
+</details>
+
+<details>
+<summary><b>POST <code>/api/solve</code></b> — validate + solve a cube</summary>
+
+**Body:**
+```json
+{ "state": "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB" }
+```
+
+`state` is 54 facelets in order **U R F D L B** (row-major), using the letters `U R F D L B`
+as color ids (U=0–8, R=9–17, F=18–26, D=27–35, L=36–44, B=45–53).
+
+**Success (200):**
+```json
+{
+  "ok": true,
+  "valid": true,
+  "state": "…54 chars…",
   "solution": {
-    "moves": ["R", "U", "R'", "U'", ...],
+    "moves": ["F'", "R'", "L2", "B", "..."],
+    "moveCount": 62,
+    "totalSteps": 64,
+    "estimateSeconds": 384,
+    "difficulty": "Easy",
     "phases": [
+      { "id": "cross", "title": "The Daisy & Cross", "goal": "Build a plus-sign on the bottom…", "moves": ["F'", "…"] },
+      { "id": "firstLayerCorners", "title": "First Layer Corners", "goal": "Drop the bottom corners into place…", "moves": ["…"] },
+      { "id": "middleLayer", "title": "Middle Layer", "goal": "Slot the four side edges…", "moves": ["…"] },
+      { "id": "lastLayerEdgesOrient", "title": "Last Layer", "goal": "Orient and permute the final layer…", "moves": ["…"] }
+    ],
+    "steps": [
       {
-        "id": "cross",
-        "title": "Bottom Cross",
-        "goal": "Solve the white cross on the bottom",
-        "moves": ["R", "U", "R'", "U'", ...]
-      },
-      {
-        "id": "firstLayerCorners",
-        "title": "White Corners",
-        ...
-      },
-      ...
+        "number": 1, "total": 64, "move": "F'",
+        "phaseId": "cross", "phaseTitle": "The Daisy & Cross",
+        "reason": "We are making a plus sign on one side…",
+        "text": "Turn the FRONT side (Green) counter-clockwise — a quarter turn (90°).",
+        "voice": "Find the green side, that's the front. Turn it counter-clockwise.",
+        "face": "F", "faceName": "FRONT", "arrow": "rotate"
+      }
     ]
   }
 }
 ```
 
-**Validation Error Response (422):**
+**Invalid cube (422):**
 ```json
 {
   "ok": false,
-  "error": "Invalid cube state: multiple center colors",
-  "details": {
-    "invalidIndices": [9, 18],
-    "reason": "Center sticker mismatch"
-  }
+  "valid": false,
+  "errors": ["The Up-Right-Front corner can't exist: Green, Red, Orange — Red and Orange are opposite colors and can't touch."],
+  "badStickers": [8, 11, 20]
 }
 ```
 
-#### Backend Commands
-
-```bash
-cd backend
-
-npm run dev              # Watch mode + run API (port 5000)
-npm run build           # Type-check + bundle to dist/index.js
-npm start               # Run bundled server
-npm run typecheck       # TypeScript checking only
-npm run lint            # ESLint
+**Malformed body (400):**
+```json
+{ "ok": false, "error": "Body must include `state` as a 54-character string or a 54-length array." }
 ```
-
-#### Tech Stack
-
-- **Node.js** — Runtime
-- **Express** — HTTP framework
-- **TypeScript** — Type safety
-- **esbuild** — Bundler
-- **tsx** — Dev-time TypeScript runner
+</details>
 
 ## 🧠 Solver Algorithm
 
-The solver uses a **beginner-friendly Layer-by-Layer approach**:
+A **beginner-friendly Layer-by-Layer (LBL)** method:
 
-1. **Bottom Cross** — Solve white edge pieces
-2. **White Corners** — Solve white corner pieces
-3. **Middle Layer** — Solve edge pieces between first and last layers
-4. **Last Layer Edges** — Orient last-layer edge pieces
-5. **Last Layer Corners** — Orient last-layer corner pieces
-6. **Last Layer Permutation** — Permute last-layer pieces into final positions
+1. **Cross** — build the bottom cross (edges aligned to centers)
+2. **First-layer corners** — finish the entire first layer
+3. **Middle layer** — slot the four belt edges
+4. **Last layer** — orient and permute the final layer until solved
 
-**Algorithm Details:**
-- First two layers use **over-generate & verify**: curated algorithms are expanded by symmetry and U-setups, all candidates are simulated, and only solutions that preserve already-solved pieces are used.
-- Last layer uses **breadth-first search** over macro moves (Sune, EOLL, T-perm, U-perm, U-turns) that preserve the first two layers.
-- Result: **always finds a solution** (not minimal, but correct and beginner-friendly).
+**How it works:**
+- The first two layers use an **over-generate & verify** engine: curated trigger algorithms are
+  expanded by cube symmetry and U-setups, every candidate is simulated, and only one that places
+  the target piece *while preserving everything already solved* is committed.
+- The last layer is solved by a **breadth-first search** over last-layer macros (Sune, EOLL,
+  T-perm, U-perm, U-turns), all of which preserve the first two layers.
+- Result: **always finds a correct solution** (not minimal, but reliable and beginner-friendly).
 
-## 📋 Testing
+The API groups these into the four `phases` shown above; the web app expands each phase into
+single-turn coaching steps.
 
-### Run Tests
+## 🧪 Testing
+
 ```bash
-npm test                    # Frontend tests
-npm run test:watch         # Watch mode
+cd frontend
+npm test            # run once
+npm run test:watch  # watch mode
 ```
 
-### Test Coverage
-
-- **Solver tests** — Validates solving algorithm against scrambles
-- **Moves tests** — Tests all 18 cube moves
-- **Color detection tests** — HSV calibration and detection accuracy
+- **Move-engine tests** — every move's order/inverse identities (e.g. `X X X X = identity`, sexy-move × 6)
+- **Solver tests** — solves 60 random scrambles end-to-end and verifies each is fully solved
+- **Color-detection tests** — recovers cubes from simulated noisy/lit camera samples
 
 ## 🛠️ Development
 
-### Environment Variables
+### Environment variables
 
-**Frontend** (`.env` or `.env.local`):
+**Frontend** (`frontend/.env`):
 ```env
 VITE_API_URL=http://localhost:5000
 ```
 
-**Backend** (`.env`):
+**Backend** (`backend/.env`):
 ```env
 PORT=5000
-NODE_ENV=development
+# Future: DATABASE_URL=postgresql://user:pass@localhost:5432/cubeguide
 ```
 
-### Code Style
+Each app ships an `.env.example`. **Code quality** is enforced by **strict TypeScript** across
+both apps (`npm run typecheck`). *(ESLint flat-config and Prettier are not yet wired up.)*
 
-- **TypeScript** — Strict mode enabled
-- **ESLint** — Airbnb config
-- **Prettier** — Auto-formatting
-- **No external state dependencies** — Zustand for state management
-
-### Adding a New Endpoint
+### Adding a backend endpoint
 
 ```typescript
 // backend/src/routes/myroute.ts
-import express from 'express';
-
-const router = express.Router();
-
-router.get('/my-endpoint', (_req, res) => {
-  res.json({ ok: true, data: 'Hello' });
-});
-
+import { Router } from 'express';
+const router = Router();
+router.get('/my-endpoint', (_req, res) => res.json({ ok: true }));
 export default router;
 
-// Then add to backend/src/index.ts
+// backend/src/index.ts
 import myRouter from './routes/myroute';
 app.use('/api', myRouter);
 ```
 
 ## 📦 Build & Deployment
 
-### Frontend Build
 ```bash
-cd frontend
-npm run build           # Creates dist/ folder
-npm run preview        # Test production build
+npm run build            # builds BOTH apps (from repo root)
+npm run build:frontend   # frontend only → frontend/dist/  (static)
+npm run build:backend    # backend only  → backend/dist/index.js
 ```
 
-**Deploy to:**
-- Vercel, Netlify, GitHub Pages (static hosting)
-- Any CDN or web server
-
-### Backend Build
-```bash
-cd backend
-npm run build          # Creates dist/index.js (esbuild bundle)
-npm start             # Run bundled server
-```
-
-**Deploy to:**
-- Heroku, Railway, Fly.io (Node.js hosting)
-- AWS Lambda (with serverless framework)
-- Docker (containerized)
-
-### Docker Support (Optional)
-
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY . .
-RUN npm run install:all && npm run build:backend
-EXPOSE 5000
-CMD ["npm", "--prefix", "backend", "start"]
-```
+- **Frontend** → Vercel, Netlify, GitHub Pages, or any static host / CDN.
+- **Backend** → Railway, Fly.io, Render, a Node host, or a container.
 
 ## 🐛 Troubleshooting
 
-### Camera Not Working?
-- Ensure you're on `localhost` or `HTTPS`
-- Check browser permissions (allow camera access)
-- Test with a different camera input device
+| Problem | Fix |
+| --- | --- |
+| Camera not working | Use `localhost` / `HTTPS`; allow camera permission in the browser |
+| "Not solvable yet" on a real cube | A face was likely scanned rotated — re-check the red-ringed stickers |
+| Port already in use | `npx kill-port 5173` (frontend) or `npx kill-port 5000` (backend) |
+| Backend can't find the engine | Keep the `frontend/` folder present (the API imports `frontend/src/core`) and run `npm run install:all` |
 
-### Port Already in Use?
-```bash
-# Kill process on port 5173 (frontend)
-npx kill-port 5173
+## 🗺️ Roadmap
 
-# Kill process on port 5000 (backend)
-npx kill-port 5000
-```
+- [ ] Real-time camera **move verification** (confirm each turn)
+- [ ] AR arrow overlay for the next move
+- [ ] Multi-language voice (Tamil, Hindi, Spanish, French, Japanese)
+- [ ] User accounts, persistence (PostgreSQL) & leaderboards
+- [ ] Challenge / speed-solving modes
 
-### Invalid Cube State?
-- Ensure exactly 54 stickers
-- Use only letters `U R F D L B`
-- Check that each face has 9 stickers of the same color
+## 📝 License
 
-### "TypeError: Cannot read property 'core'" in Backend?
-- Ensure `npm run install:all` was run
-- Rebuild: `npm run build:backend`
+This project is currently **private and unpublished — all rights reserved**. (Open to switching
+to MIT later; if so, a `LICENSE` file will be added.)
 
-## 🚀 Roadmap
+## 📧 Contact
 
-- [ ] Real-time camera move verification
-- [ ] AR arrow overlay for next move
-- [ ] Multi-language voice support (Spanish, French, German, Japanese)
-- [ ] Leaderboard & user accounts
-- [ ] Advanced solving modes (speed solving, CFOP)
-- [ ] Mobile app (React Native)
-- [ ] Multiplayer challenges
+**Maintainer:** Padmashri · **GitHub:** [@padmashri23](https://github.com/padmashri23)
 
-**Made with ❤️ for Rubik's Cube enthusiasts and beginners worldwide.**
+<div align="center">
+
+---
+
+**Made with ❤️ for Rubik's Cube beginners everywhere.**
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:22d3ee,100:4f8cff&height=120&section=footer" width="100%" alt="" />
+
+</div>
