@@ -75,7 +75,6 @@ export default function DashboardPage() {
           </Link>
         </motion.div>
       )}
-
       <section className="dash__stats" aria-label="Your stats">
         {cards.map((card, i) => (
           <motion.div
