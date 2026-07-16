@@ -92,7 +92,6 @@ export default function DashboardPage() {
           </motion.div>
         ))}
       </section>
-
       <motion.section
         className="glass dash__level"
         aria-label="Level progress"
