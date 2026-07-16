@@ -5,20 +5,17 @@
  * and the full achievements grid (earned vs locked). Friendly empty-state nudges
  * first-time users toward their first solve.
  */
-
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useStore, levelForXp, xpForLevel } from '../state/store';
 import './DashboardPage.css';
-
 interface StatCard {
   label: string;
   value: string;
   glyph: string;
   tone: 'accent' | 'good' | 'warn';
 }
-
 export default function DashboardPage() {
   const stats = useStore((s) => s.stats);
   // Select the stable action ref — calling it *inside* the selector would return
