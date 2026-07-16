@@ -25,14 +25,12 @@ export default function DashboardPage() {
     () => achievementsListFn(),
     [achievementsListFn, stats],
   );
-
   const level = levelForXp(stats.xp);
   const floor = xpForLevel(level);
   const ceil = xpForLevel(level + 1);
   const span = Math.max(1, ceil - floor);
   const percent = Math.max(0, Math.min(100, ((stats.xp - floor) / span) * 100));
   const xpToNext = Math.max(0, ceil - stats.xp);
-
   const cards = useMemo<StatCard[]>(
     () => [
       { label: 'Level', value: String(level), glyph: '⭐', tone: 'accent' },
@@ -42,9 +40,7 @@ export default function DashboardPage() {
     ],
     [level, stats.xp, stats.solves, stats.streak],
   );
-
   const earnedCount = achievements.filter((a) => a.earnedAt !== null).length;
-
   return (
     <main className="container dash">
       <motion.header
