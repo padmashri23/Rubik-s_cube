@@ -13,7 +13,6 @@ import Cube3D from '../components/Cube3D';
 import { scramble } from '../core/cube';
 import { useStore } from '../state/store';
 import './LandingPage.css';
-
 interface Feature {
   icon: string;
   title: string;
@@ -59,7 +58,6 @@ interface Step {
   title: string;
   body: string;
 }
-
 const STEPS: Step[] = [
   {
     n: 1,
@@ -77,7 +75,6 @@ const STEPS: Step[] = [
     body: 'Watch the 3D cube, listen to the voice, and turn move by move. You’ll get there — guaranteed.',
   },
 ];
-
 const sectionVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
   show: {
@@ -86,7 +83,6 @@ const sectionVariants: Variants = {
     transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
   },
 };
-
 const staggerParent: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.08 } },
