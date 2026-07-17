@@ -52,7 +52,6 @@ const FEATURES: Feature[] = [
     body: 'Curious how it works? Learn the beginner method as you go, at whatever pace feels good.',
   },
 ];
-
 interface Step {
   n: number;
   title: string;
@@ -92,7 +91,6 @@ const cardVariants: Variants = {
   hidden: { opacity: 0, y: 22 },
   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
 };
-
 function Section({
   children,
   className,
