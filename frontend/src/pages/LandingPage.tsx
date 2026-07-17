@@ -6,7 +6,6 @@
  * solved. The hero shows the real 3D cube (scrambled, auto-spinning) so the
  * promise is visible the moment the page loads.
  */
-
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, type Variants } from 'framer-motion';
@@ -21,7 +20,6 @@ interface Feature {
   body: string;
   status?: string;
 }
-
 const FEATURES: Feature[] = [
   {
     icon: '📷',
