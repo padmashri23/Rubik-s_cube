@@ -21,12 +21,10 @@
   gap: 1rem;
   margin-bottom: 0.75rem;
 }
-
 .learn__progress-label {
   color: var(--text-dim);
   font-size: 0.95rem;
 }
-
 .learn__progress-label strong {
   color: var(--text);
   font-size: 1.1rem;
