@@ -2,23 +2,18 @@
    LearnPage — beginner Layer-By-Layer primer.
    Dark glassmorphism + neon-blue, building on the global design atoms.
    ========================================================================== */
-
 .learn {
   padding-block: clamp(1.5rem, 4vw, 3rem);
   max-width: 880px;
 }
-
 .learn__head {
   margin-bottom: 1.75rem;
 }
-
 /* --- progress overview ----------------------------------------------------- */
-
 .learn__progress {
   padding: 1.1rem 1.25rem;
   margin-bottom: 1.75rem;
 }
-
 .learn__progress-top {
   display: flex;
   align-items: center;
