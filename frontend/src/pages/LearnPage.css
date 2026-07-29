@@ -137,7 +137,6 @@
 .learn__panel {
   overflow: hidden;
 }
-
 .learn__panel-inner {
   padding: 0 1.25rem 1.4rem;
   display: flex;
@@ -146,7 +145,6 @@
   border-top: 1px solid var(--border);
   padding-top: 1.1rem;
 }
-
 .learn__explain {
   color: var(--text-dim);
   line-height: 1.65;
