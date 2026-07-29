@@ -52,23 +52,19 @@
   margin: 0;
   padding: 0;
 }
-
 .learn__item {
   padding: 0;
   overflow: hidden;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 .learn__item[data-done='true'] {
   border-color: rgba(52, 211, 153, 0.4);
   box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.25);
 }
-
 .learn__heading {
   margin: 0;
   font-size: 1rem;
 }
-
 .learn__trigger {
   width: 100%;
   display: flex;
