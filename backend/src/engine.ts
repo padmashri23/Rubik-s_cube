@@ -7,7 +7,6 @@
  * If the project later extracts the engine into its own published package, this
  * is the single import site to update.
  */
-
 export {
   solve,
   type Solution,
