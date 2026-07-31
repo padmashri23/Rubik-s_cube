@@ -13,7 +13,6 @@ export {
   type SolutionPhase,
   type PhaseId,
 } from '../../frontend/src/core/solver';
-
 export {
   validateState,
   stringToState,
@@ -24,7 +23,6 @@ export {
   SOLVED_STATE,
   type Validation,
 } from '../../frontend/src/core/cube';
-
 export {
   toPlain,
   estimateSeconds,
