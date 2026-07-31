@@ -8,7 +8,6 @@
  * The solver is heavy-ish (cross BFS), so solutions are generated on demand via
  * generateSolution() and cached until the cube state changes.
  */
-
 import { create } from 'zustand';
 import { solve, type Solution } from '../core/solver';
 import {
@@ -29,14 +28,12 @@ export interface Settings {
   voiceEnabled: boolean;
   voiceRate: number; // 0.5–2
 }
-
 export interface Achievement {
   id: string;
   title: string;
   description: string;
   earnedAt: number | null;
 }
-
 const ACHIEVEMENTS: Omit<Achievement, 'earnedAt'>[] = [
   { id: 'first-solve', title: 'First Cube Solved', description: 'Complete your very first solve.' },
   { id: 'ten-solves', title: '10 Cubes Solved', description: 'Solve ten cubes in total.' },
@@ -44,7 +41,6 @@ const ACHIEVEMENTS: Omit<Achievement, 'earnedAt'>[] = [
   { id: 'scanner', title: 'Sharp Eyes', description: 'Generate a solution from a scanned cube.' },
   { id: 'cube-master', title: 'Cube Master', description: 'Reach level 5.' },
 ];
-
 export interface Stats {
   xp: number;
   solves: number;
@@ -52,7 +48,6 @@ export interface Stats {
   lastSolveDay: string | null; // YYYY-MM-DD
   achievements: Record<string, number>; // id -> earnedAt
 }
-
 const DEFAULT_SETTINGS: Settings = {
   colorblind: false,
   largeText: false,
@@ -60,7 +55,6 @@ const DEFAULT_SETTINGS: Settings = {
   voiceEnabled: true,
   voiceRate: 1,
 };
-
 const DEFAULT_STATS: Stats = {
   xp: 0,
   solves: 0,
@@ -68,7 +62,6 @@ const DEFAULT_STATS: Stats = {
   lastSolveDay: null,
   achievements: {},
 };
-
 const SETTINGS_KEY = 'cubeguide.settings';
 const STATS_KEY = 'cubeguide.stats';
 
@@ -81,7 +74,6 @@ function load<T>(key: string, fallback: T): T {
     return fallback;
   }
 }
-
 function save(key: string, value: unknown): void {
   if (typeof localStorage === 'undefined') return;
   try {
@@ -90,18 +82,14 @@ function save(key: string, value: unknown): void {
     /* ignore quota / private mode */
   }
 }
-
 export function levelForXp(xp: number): number {
   // 100 XP per level, gently increasing.
   return Math.floor(Math.sqrt(xp / 50)) + 1;
 }
-
 export function xpForLevel(level: number): number {
   return 50 * (level - 1) ** 2;
 }
-
 // --- store -----------------------------------------------------------------
-
 export interface AppState {
   // cube + solution
   cubeState: string[] | null;
@@ -133,7 +121,6 @@ export interface AppState {
   updateSettings: (patch: Partial<Settings>) => void;
   achievementsList: () => Achievement[];
 }
-
 export const useStore = create<AppState>((set, get) => ({
   cubeState: null,
   validation: null,
@@ -142,13 +129,10 @@ export const useStore = create<AppState>((set, get) => ({
   stepCursor: 0,
   solveError: null,
   solvedFromScan: false,
-
   settings: load(SETTINGS_KEY, DEFAULT_SETTINGS),
   stats: load(STATS_KEY, DEFAULT_STATS),
-
   estimateSeconds: 0,
   difficulty: '—',
-
   setCubeState(state, fromScan = false) {
     const validation = validateState(state);
     set({
@@ -162,7 +146,6 @@ export const useStore = create<AppState>((set, get) => ({
     });
     return validation;
   },
-
   loadScramble(n = 22, seed = Math.floor(Math.random() * 1e6) || 1) {
     const { state } = scrambleCube(n, seed);
     get().setCubeState(state, false);
