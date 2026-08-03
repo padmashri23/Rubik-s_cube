@@ -33,7 +33,6 @@ export function buildGuidedSteps(
 ): GuidedStep[] {
   const steps: GuidedStep[] = [];
   const total = solution.phases.reduce((n, p) => n + p.moves.length, 0);
-
   let state = initial.slice();
   let number = 0;
 
