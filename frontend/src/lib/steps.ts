@@ -5,7 +5,6 @@
  * its own step — a beginner follows one quarter/half turn at a time — and carry
  * the phase context (title, goal, "why") onto each step for the coach UI.
  */
-
 import type { Solution } from '../core/solver';
 import { PHASE_REASON, toPlain, type PlainInstruction } from '../core/notation';
 import { applyMove, type MoveName } from '../core/moves';
