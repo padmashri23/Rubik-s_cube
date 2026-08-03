@@ -1,9 +1,15 @@
+/* ============================================================================
+   SolvePage — 3D stage on the left, step coach on the right.
+   ========================================================================== */
+
 .solve {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(330px, 0.85fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
   gap: 22px;
   align-items: start;
 }
+
+/* ---- 3D stage ------------------------------------------------------------ */
 
 .solve__stage {
   padding: 14px;
@@ -12,17 +18,64 @@
   overflow: hidden;
 }
 
+.solve__stage-inner {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(79, 140, 255, 0.14), transparent 65%),
+    rgba(255, 255, 255, 0.02);
+}
+
 .solve__stage-meta {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 12px 6px 4px;
+  padding: 14px 6px 4px;
 }
+
+.solve__stage-meta strong {
+  color: var(--text);
+}
+
+/* ---- coach column -------------------------------------------------------- */
 
 .solve__coach {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+/* ---- progress ------------------------------------------------------------ */
+
+.solve__progress-card {
+  padding: 16px 18px;
+}
+
+.solve__progress-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.solve__progress-count {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.solve__progress-count strong {
+  font-size: 1.15rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.solve__progress-pct {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .solve__progress {
@@ -36,8 +89,56 @@
   height: 100%;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  transition: width 0.35s ease;
+  box-shadow: 0 0 14px -2px var(--accent-glow);
 }
+
+.solve__phases {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.solve__phase-pip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  color: var(--text-faint);
+}
+
+.solve__phase-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  flex: 0 0 auto;
+}
+
+.solve__phase-pip.is-current {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.solve__phase-pip.is-current .solve__phase-dot {
+  background: var(--accent-2);
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.22);
+}
+
+.solve__phase-pip.is-done {
+  color: var(--text-dim);
+}
+
+.solve__phase-pip.is-done .solve__phase-dot {
+  background: var(--good);
+  border-color: transparent;
+}
+
+/* ---- step card ----------------------------------------------------------- */
 
 .solve__card,
 .solve__done {
@@ -48,68 +149,99 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
 .solve__phase {
   font-weight: 700;
   color: var(--accent-2);
-  font-size: 0.92rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
 }
 
 .solve__count {
   color: var(--text-faint);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .solve__instruction {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .solve__arrow {
   flex: none;
-  width: 58px;
-  height: 58px;
-  border-radius: 16px;
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
   display: grid;
   place-items: center;
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 800;
   color: #06122b;
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 10px 28px -10px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.28);
 }
 
 .solve__text {
-  font-size: 1.28rem;
+  font-size: 1.3rem;
   font-weight: 650;
   line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .solve__reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   color: var(--text-dim);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
   margin-bottom: 20px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.solve__reason-tag {
+  flex: 0 0 auto;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--accent-2);
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.3);
 }
 
 .solve__controls {
   display: grid;
-  grid-template-columns: 1fr 1.6fr;
+  grid-template-columns: 1fr 1.7fr;
   gap: 10px;
 }
 
 .solve__next {
   font-size: 1.05rem;
+  padding: 15px 22px;
 }
 
 .solve__hint {
-  margin-top: 12px;
+  margin-top: 14px;
   text-align: center;
   color: var(--good);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
+
+/* ---- voice --------------------------------------------------------------- */
 
 .solve__voice {
   padding: 16px 18px;
@@ -119,8 +251,54 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.solve__voice-title {
+  display: flex;
+  flex-direction: column;
   font-weight: 600;
-  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+.solve__voice-title small {
+  font-weight: 400;
+  font-size: 0.76rem;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+
+.solve__switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 25px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.solve__switch.is-on {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+}
+
+.solve__switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 19px;
+  height: 19px;
+  border-radius: 999px;
+  background: var(--text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s ease;
+}
+
+.solve__switch.is-on .solve__switch-thumb {
+  transform: translateX(19px);
 }
 
 .solve__voice-actions {
@@ -131,38 +309,69 @@
 
 .solve__voice-actions .btn {
   padding: 9px 14px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .solve__voice-note {
   margin-top: 10px;
   color: var(--text-faint);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
+
+.solve__keys {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+  color: var(--text-faint);
+  font-size: 0.76rem;
+}
+
+.solve__keys kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  margin-right: 2px;
+  border-radius: 5px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+/* ---- finished ------------------------------------------------------------ */
 
 .solve__done {
   text-align: center;
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(52, 211, 153, 0.16), transparent 65%),
+    var(--surface);
+  border-color: rgba(52, 211, 153, 0.4);
 }
 
 .solve__done-emoji {
-  font-size: 3rem;
+  font-size: 3.2rem;
+  line-height: 1;
 }
 
 .solve__done h2 {
-  margin: 8px 0;
+  margin: 10px 0 8px;
   font-size: 1.8rem;
 }
 
 .solve__done p {
   color: var(--text-dim);
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .solve__done-actions {
   display: flex;
   gap: 10px;
   justify-content: center;
+  flex-wrap: wrap;
 }
+
+/* ---- empty state --------------------------------------------------------- */
 
 .solve-empty {
   display: grid;
@@ -171,9 +380,25 @@
 }
 
 .solve-empty__card {
-  padding: 40px;
+  padding: 48px 40px;
   text-align: center;
-  max-width: 560px;
+  max-width: 580px;
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(79, 140, 255, 0.14), transparent 65%),
+    var(--surface);
+}
+
+.solve-empty__glyph {
+  display: block;
+  font-size: 2.8rem;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.solve-empty__text {
+  color: var(--text-dim);
+  margin: 10px auto 26px;
+  max-width: 46ch;
 }
 
 .solve-empty__actions {
@@ -183,11 +408,22 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 900px) {
+/* ---- responsive ---------------------------------------------------------- */
+
+@media (max-width: 960px) {
   .solve {
     grid-template-columns: 1fr;
   }
   .solve__stage {
     position: static;
+  }
+}
+
+@media (max-width: 520px) {
+  .solve__controls {
+    grid-template-columns: 1fr;
+  }
+  .solve__text {
+    font-size: 1.15rem;
   }
 }

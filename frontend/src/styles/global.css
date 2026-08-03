@@ -51,9 +51,15 @@ body,
   height: 100%;
 }
 
+/* The root font-size is what `rem` resolves against, and virtually the whole
+   UI is sized in rem — so "Large text" has to land here, not on <body>. */
+html {
+  font-size: var(--fs-base);
+}
+
 body {
   font-family: var(--font);
-  font-size: var(--fs-base);
+  font-size: 1rem;
   color: var(--text);
   background:
     radial-gradient(1100px 700px at 80% -10%, rgba(79, 140, 255, 0.16), transparent 60%),

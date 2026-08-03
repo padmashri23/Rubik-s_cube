@@ -17,16 +17,44 @@
   overflow: hidden;
 }
 
+/* Slow-drifting aurora behind the hero. Purely decorative, and it holds still
+   the moment the user asks for reduced motion. */
 .land__hero::before {
   content: '';
   position: absolute;
-  inset: -20% 0 auto 0;
-  height: 520px;
+  inset: -30% -10% auto -10%;
+  height: 680px;
   background:
-    radial-gradient(620px 360px at 78% 12%, rgba(79, 140, 255, 0.22), transparent 60%),
-    radial-gradient(520px 320px at 8% 30%, rgba(34, 211, 238, 0.14), transparent 60%);
+    radial-gradient(620px 360px at 78% 12%, rgba(79, 140, 255, 0.26), transparent 60%),
+    radial-gradient(520px 320px at 8% 30%, rgba(34, 211, 238, 0.16), transparent 60%),
+    radial-gradient(460px 300px at 45% 70%, rgba(147, 51, 234, 0.12), transparent 65%);
   pointer-events: none;
   z-index: 0;
+  animation: land-aurora 22s ease-in-out infinite alternate;
+}
+
+@keyframes land-aurora {
+  from {
+    transform: translate3d(-2%, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(3%, 2%, 0) scale(1.08);
+  }
+}
+
+/* Faint grid, fading out downward — gives the dark field some structure. */
+.land__hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 75%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 75%);
 }
 
 .land__hero-inner {
@@ -98,6 +126,48 @@
   font-weight: 700;
 }
 
+/* ---- hero stat strip ------------------------------------------------------ */
+
+.land__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 8px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--border);
+  width: 100%;
+  max-width: 460px;
+}
+
+.land__stat {
+  flex: 1 1 0;
+  min-width: 110px;
+  padding-right: 18px;
+}
+
+.land__stat + .land__stat {
+  padding-left: 18px;
+  border-left: 1px solid var(--border);
+}
+
+.land__stat-num {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  background: linear-gradient(120deg, #fff 10%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.land__stat-label {
+  margin: 3px 0 0;
+  font-size: 0.76rem;
+  color: var(--text-faint);
+  line-height: 1.35;
+}
+
 /* hero cube panel */
 .land__hero-cube {
   position: relative;
@@ -148,17 +218,39 @@
 }
 
 .land__card {
+  position: relative;
   padding: 24px 22px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow: hidden;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Accent edge that lights up on hover. */
+.land__card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
 .land__card:hover {
   transform: translateY(-4px);
   border-color: var(--border-strong);
   box-shadow: var(--shadow-glow);
+}
+
+.land__card:hover::before {
+  opacity: 1;
+}
+
+.land__card:hover .land__card-icon {
+  transform: scale(1.06) rotate(-4deg);
+  border-color: var(--border-strong);
 }
 
 .land__card-icon {
@@ -172,6 +264,7 @@
   border-radius: 14px;
   background: linear-gradient(135deg, rgba(79, 140, 255, 0.18), rgba(34, 211, 238, 0.12));
   border: 1px solid var(--border);
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
 .land__card-title {
@@ -200,22 +293,29 @@
 /* ---- How it works --------------------------------------------------------- */
 
 .land__steps {
+  position: relative;
   list-style: none;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
   margin: 0;
   padding: 0;
-  counter-reset: land-step;
 }
 
+/* Note: no `overflow: hidden` here — the connector below has to reach across
+   the grid gap. The top accent bar is rounded to match the card instead. */
 .land__step {
   position: relative;
   padding: 28px 24px 24px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.land__step:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
 }
 
 .land__step::after {
@@ -223,11 +323,29 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
   opacity: 0.8;
 }
 
+/* Dashed connector spanning exactly the grid gap to the next step. */
+.land__step::before {
+  content: '';
+  position: absolute;
+  top: 51px; /* padding-top 28 + half of the 46px numbered circle */
+  left: 100%;
+  width: 18px; /* matches .land__steps gap */
+  border-top: 2px dashed var(--border-strong);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.land__step:last-child::before {
+  display: none;
+}
+
 .land__step-num {
+  position: relative;
   width: 46px;
   height: 46px;
   display: inline-flex;
@@ -295,6 +413,10 @@
   .land__steps {
     grid-template-columns: repeat(2, 1fr);
   }
+  /* Once the steps wrap, a connector pointing right is just wrong. */
+  .land__step::before {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {
@@ -333,4 +455,15 @@
   .land__cta-row .btn {
     flex: 1;
   }
+  .land__stat {
+    min-width: 90px;
+  }
+  .land__stat-num {
+    font-size: 1.4rem;
+  }
+}
+
+/* The aurora drift is decoration; hold it still when motion is reduced. */
+html[data-reduced-motion='true'] .land__hero::before {
+  animation: none;
 }

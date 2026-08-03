@@ -52,6 +52,13 @@ const FEATURES: Feature[] = [
     body: 'Curious how it works? Learn the beginner method as you go, at whatever pace feels good.',
   },
 ];
+
+/** Grounded facts about what the app does — no invented metrics. */
+const STATS: { value: string; label: string }[] = [
+  { value: '6', label: 'faces read by camera' },
+  { value: '0', label: 'notation to memorize' },
+  { value: '100%', label: 'of valid cubes solved' },
+];
 interface Step {
   n: number;
   title: string;
@@ -155,6 +162,15 @@ export default function LandingPage() {
               <li>Hands-free voice coach</li>
               <li>Works on any cube</li>
             </motion.ul>
+
+            <motion.dl className="land__stats" variants={sectionVariants}>
+              {STATS.map((s) => (
+                <div key={s.label} className="land__stat">
+                  <dt className="land__stat-num">{s.value}</dt>
+                  <dd className="land__stat-label">{s.label}</dd>
+                </div>
+              ))}
+            </motion.dl>
           </motion.div>
 
           <motion.div

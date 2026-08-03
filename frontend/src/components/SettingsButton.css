@@ -1,18 +1,38 @@
 /* ============================================================================
-   SettingsButton — gear trigger + glassmorphism settings drawer.
+   SettingsButton — gear trigger + anchored dropdown.
    Custom classes are prefixed `settings__` to avoid collisions with the
    global design atoms (.glass, .btn, .chip, ...).
    ========================================================================== */
 
+.settings {
+  position: relative;
+  flex: 0 0 auto;
+}
+
 .settings__trigger {
-  width: 44px;
-  height: 44px;
-  padding: 0;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--surface);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   line-height: 1;
+  color: var(--text-dim);
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.settings__trigger:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.settings__trigger.is-open {
+  background: var(--surface-2);
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .settings__gear {
@@ -21,50 +41,43 @@
 }
 
 .settings__trigger:hover .settings__gear,
-.settings__trigger[aria-expanded='true'] .settings__gear {
+.settings__trigger.is-open .settings__gear {
   transform: rotate(90deg);
 }
 
-/* ---- backdrop + panel ---------------------------------------------------- */
+/* ---- dropdown panel ------------------------------------------------------ */
 
-.settings__backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: rgba(3, 4, 12, 0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-/* Explicitly pinned to the right edge (not flex) so it can never overflow the
-   viewport, and higher specificity than `.glass` so it's a solid opaque panel
-   instead of the near-transparent glass atom. */
-.settings__backdrop .settings__panel {
-  position: fixed;
-  top: 0;
+.settings__panel {
+  position: absolute;
+  top: calc(100% + 12px);
   right: 0;
-  bottom: 0;
-  width: min(440px, 100vw);
-  max-width: 100vw;
-  box-sizing: border-box;
+  z-index: 120;
+  width: min(340px, calc(100vw - 32px));
+  max-height: min(560px, calc(100vh - 110px));
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius) 0 0 var(--radius);
+  transform-origin: top right;
+  border-radius: var(--radius);
   border: 1px solid var(--border-strong);
-  border-right: none;
+  background: linear-gradient(180deg, #101830 0%, #090d1b 100%);
+  box-shadow:
+    0 24px 60px -18px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
   outline: none;
-  background: linear-gradient(180deg, #0d1426 0%, #080b18 100%);
-  box-shadow: -30px 0 70px -24px rgba(0, 0, 0, 0.75);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
 
-@media (max-width: 480px) {
-  .settings__backdrop .settings__panel {
-    width: 100vw;
-    border-radius: 0;
-    border-left: none;
-  }
+/* Little arrow pointing back at the gear. */
+.settings__panel::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 15px;
+  width: 11px;
+  height: 11px;
+  transform: rotate(45deg);
+  background: #101830;
+  border-left: 1px solid var(--border-strong);
+  border-top: 1px solid var(--border-strong);
 }
 
 /* ---- header -------------------------------------------------------------- */
@@ -74,25 +87,27 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 20px 22px;
+  padding: 14px 16px 12px;
   border-bottom: 1px solid var(--border);
 }
 
 .settings__title {
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 
 .settings__close {
-  width: 38px;
-  height: 38px;
-  padding: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  font-size: 0.95rem;
-  color: var(--text-dim);
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  transition: background 0.16s ease, color 0.16s ease;
 }
 
 .settings__close:hover {
+  background: var(--surface-2);
   color: var(--text);
 }
 
@@ -100,16 +115,15 @@
 
 .settings__body {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  overflow-x: hidden;
-  padding: 20px 22px 28px;
-  scrollbar-gutter: stable;
+  padding: 4px 16px 8px;
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
 }
 
 .settings__body::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 
 .settings__body::-webkit-scrollbar-thumb {
@@ -118,17 +132,17 @@
 }
 
 .settings__section + .settings__section {
-  margin-top: 26px;
-  padding-top: 22px;
+  margin-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid var(--border);
 }
 
 .settings__section-title {
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-dim);
-  margin-bottom: 14px;
+  letter-spacing: 0.09em;
+  color: var(--text-faint);
+  margin: 12px 0 4px;
 }
 
 /* ---- rows ---------------------------------------------------------------- */
@@ -137,18 +151,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 12px 0;
-}
-
-.settings__row + .settings__row {
-  border-top: 1px solid var(--border);
+  gap: 14px;
+  padding: 10px 0;
 }
 
 .settings__row--stack {
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  gap: 9px;
 }
 
 .settings__row-text {
@@ -158,13 +168,15 @@
 .settings__row-label {
   display: block;
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
 }
 
 .settings__row-note {
-  margin-top: 3px;
-  font-size: 0.82rem;
-  color: var(--text-dim);
+  margin-top: 2px;
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  line-height: 1.35;
 }
 
 /* ---- toggle switch ------------------------------------------------------- */
@@ -172,8 +184,8 @@
 .settings__switch {
   position: relative;
   flex: 0 0 auto;
-  width: 50px;
-  height: 28px;
+  width: 44px;
+  height: 25px;
   border-radius: 999px;
   border: 1px solid var(--border-strong);
   background: var(--surface-2);
@@ -186,7 +198,7 @@
 }
 
 .settings__switch:disabled {
-  opacity: 0.65;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
@@ -194,16 +206,16 @@
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 22px;
-  height: 22px;
+  width: 19px;
+  height: 19px;
   border-radius: 999px;
   background: var(--text);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
   transition: transform 0.2s ease;
 }
 
 .settings__switch.is-on .settings__switch-thumb {
-  transform: translateX(22px);
+  transform: translateX(19px);
 }
 
 /* ---- range --------------------------------------------------------------- */
@@ -211,12 +223,13 @@
 .settings__range {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .settings__range input[type='range'] {
   flex: 1;
-  height: 6px;
+  min-width: 0;
+  height: 5px;
   border-radius: 999px;
   background: var(--surface-2);
   accent-color: var(--accent);
@@ -224,25 +237,26 @@
 }
 
 .settings__range input[type='range']:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 .settings__range-value {
   flex: 0 0 auto;
+  min-width: 3ch;
+  text-align: right;
+  font-size: 0.82rem;
   font-variant-numeric: tabular-nums;
-  color: var(--text);
+  color: var(--text-dim);
 }
 
 /* ---- hint ---------------------------------------------------------------- */
 
 .settings__hint {
-  margin-top: 16px;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm, 12px);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  font-size: 0.84rem;
-  color: var(--text-dim);
+  margin: 0;
+  padding: 11px 16px 13px;
+  border-top: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--text-faint);
   line-height: 1.45;
 }

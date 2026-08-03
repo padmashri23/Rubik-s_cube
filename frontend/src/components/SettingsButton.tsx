@@ -1,9 +1,10 @@
 /**
- * SettingsButton — header gear button that opens a glassmorphism settings drawer.
+ * SettingsButton — header gear that opens a compact settings dropdown.
  *
- * Reads and writes the accessibility settings slice of the global store. The
- * drawer is keyboard accessible (Escape to close, focusable controls) and
- * respects the user's "reduce motion" preference when animating.
+ * The panel is anchored directly under the gear rather than taking over the
+ * screen: these are quick preference flips, not a destination. Closes on
+ * Escape, on outside click, and on Tab-out; focus returns to the gear only
+ * when the panel was actually open.
  */
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
@@ -17,7 +18,7 @@ interface ToggleRowProps {
   description?: string;
   checked: boolean;
   disabled?: boolean;
-  onChange?: (next: boolean) => void;
+  onChange: (next: boolean) => void;
 }
 
 function ToggleRow({ id, label, description, checked, disabled, onChange }: ToggleRowProps) {
@@ -42,7 +43,7 @@ function ToggleRow({ id, label, description, checked, disabled, onChange }: Togg
         aria-describedby={descId}
         disabled={disabled}
         className={'settings__switch' + (checked ? ' is-on' : '')}
-        onClick={onChange ? () => onChange(!checked) : undefined}
+        onClick={() => onChange(!checked)}
       >
         <span className="settings__switch-thumb" aria-hidden />
       </button>
@@ -51,9 +52,9 @@ function ToggleRow({ id, label, description, checked, disabled, onChange }: Togg
 }
 
 const panelVariants: Variants = {
-  hidden: { opacity: 0, x: 28, scale: 0.98 },
-  visible: { opacity: 1, x: 0, scale: 1 },
-  exit: { opacity: 0, x: 28, scale: 0.98 },
+  hidden: { opacity: 0, y: -8, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -6, scale: 0.98 },
 };
 
 export default function SettingsButton() {
@@ -61,53 +62,69 @@ export default function SettingsButton() {
   const update = useStore((s) => s.updateSettings);
 
   const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  // Guards the focus-restore effect so it can't fire on first mount and steal
+  // focus from the page the moment the app loads.
+  const wasOpen = useRef(false);
 
   const close = useCallback(() => setOpen(false), []);
 
-  // Escape closes the drawer; lock body scroll while it is open.
+  // Escape and outside clicks close the dropdown.
   useEffect(() => {
     if (!open) return;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation();
         close();
       }
     };
+    const onPointerDown = (e: PointerEvent) => {
+      if (!wrapRef.current?.contains(e.target as Node)) close();
+    };
+    const onFocusIn = (e: FocusEvent) => {
+      if (!wrapRef.current?.contains(e.target as Node)) close();
+    };
+
     document.addEventListener('keydown', onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('focusin', onFocusIn);
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('focusin', onFocusIn);
     };
   }, [open, close]);
 
-  // Move focus into the panel on open, and restore it to the trigger on close.
+  // Move focus into the panel on open; restore it to the gear on close.
   useEffect(() => {
     if (open) {
+      wasOpen.current = true;
       panelRef.current?.focus();
-    } else {
+    } else if (wasOpen.current) {
+      wasOpen.current = false;
       triggerRef.current?.focus();
     }
   }, [open]);
 
-  const toggle = (key: keyof Settings) => (next: boolean) => update({ [key]: next } as Partial<Settings>);
+  const toggle = (key: keyof Settings) => (next: boolean) =>
+    update({ [key]: next } as Partial<Settings>);
 
   // When motion is reduced, collapse animations to an instant cross-fade.
-  const duration = settings.reducedMotion ? 0 : 0.22;
+  const duration = settings.reducedMotion ? 0 : 0.16;
 
   return (
-    <>
+    <div className="settings" ref={wrapRef}>
       <button
         ref={triggerRef}
         type="button"
-        className="btn btn-ghost settings__trigger"
+        className={'settings__trigger' + (open ? ' is-open' : '')}
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label="Open settings"
+        aria-label="Settings"
         onClick={() => setOpen((v) => !v)}
       >
         <span className="settings__gear" aria-hidden>
@@ -118,127 +135,101 @@ export default function SettingsButton() {
       <AnimatePresence>
         {open ? (
           <motion.div
-            className="settings__backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration }}
-            onClick={close}
+            ref={panelRef}
+            className="settings__panel"
+            role="dialog"
+            aria-labelledby={titleId}
+            tabIndex={-1}
+            variants={panelVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ duration, ease: 'easeOut' }}
           >
-            <motion.div
-              ref={panelRef}
-              className="glass settings__panel"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby={titleId}
-              tabIndex={-1}
-              variants={panelVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              transition={{ duration, ease: 'easeOut' }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <header className="settings__header">
-                <h2 className="settings__title" id={titleId}>
-                  Settings
-                </h2>
-                <button
-                  type="button"
-                  className="btn btn-ghost settings__close"
-                  aria-label="Close settings"
-                  onClick={close}
-                >
-                  ✕
-                </button>
-              </header>
+            <header className="settings__header">
+              <h2 className="settings__title" id={titleId}>
+                Settings
+              </h2>
+              <button
+                type="button"
+                className="settings__close"
+                aria-label="Close settings"
+                onClick={close}
+              >
+                ✕
+              </button>
+            </header>
 
-              <div className="settings__body">
-                <section className="settings__section" aria-label="Appearance">
-                  <h3 className="settings__section-title">Appearance</h3>
+            <div className="settings__body">
+              <section className="settings__section" aria-label="Accessibility">
+                <h3 className="settings__section-title">Accessibility</h3>
 
-                  <ToggleRow
-                    id="settings-dark"
-                    label="Dark mode"
-                    description="Dark theme is on by default"
-                    checked
-                    disabled
-                  />
+                <ToggleRow
+                  id="settings-colorblind"
+                  label="Colorblind palette"
+                  description="High-contrast facelet colors."
+                  checked={settings.colorblind}
+                  onChange={toggle('colorblind')}
+                />
 
-                  <ToggleRow
-                    id="settings-colorblind"
-                    label="Colorblind palette"
-                    description="High-contrast facelet colors for easier identification."
-                    checked={settings.colorblind}
-                    onChange={toggle('colorblind')}
-                  />
+                <ToggleRow
+                  id="settings-large-text"
+                  label="Large text"
+                  description="Increase the base font size."
+                  checked={settings.largeText}
+                  onChange={toggle('largeText')}
+                />
 
-                  <ToggleRow
-                    id="settings-large-text"
-                    label="Large text"
-                    description="Increase the base font size across the app."
-                    checked={settings.largeText}
-                    onChange={toggle('largeText')}
-                  />
+                <ToggleRow
+                  id="settings-reduced-motion"
+                  label="Reduce motion"
+                  description="Minimize animations and transitions."
+                  checked={settings.reducedMotion}
+                  onChange={toggle('reducedMotion')}
+                />
+              </section>
 
-                  <ToggleRow
-                    id="settings-reduced-motion"
-                    label="Reduce motion"
-                    description="Minimize animations and transitions."
-                    checked={settings.reducedMotion}
-                    onChange={toggle('reducedMotion')}
-                  />
-                </section>
+              <section className="settings__section" aria-label="Voice coach">
+                <h3 className="settings__section-title">Voice coach</h3>
 
-                <section className="settings__section" aria-label="Voice coach">
-                  <h3 className="settings__section-title">Voice coach</h3>
+                <ToggleRow
+                  id="settings-voice"
+                  label="Speak each step"
+                  description="Read moves aloud while you solve."
+                  checked={settings.voiceEnabled}
+                  onChange={toggle('voiceEnabled')}
+                />
 
-                  <ToggleRow
-                    id="settings-voice"
-                    label="Voice coach"
-                    description="Speak each step aloud while you solve."
-                    checked={settings.voiceEnabled}
-                    onChange={toggle('voiceEnabled')}
-                  />
-
-                  <div className="settings__row settings__row--stack">
-                    <div className="settings__row-text">
-                      <label className="settings__row-label" htmlFor="settings-voice-rate">
-                        Voice speed
-                      </label>
-                      <p className="settings__row-note" id="settings-voice-rate-desc">
-                        How fast the coach speaks.
-                      </p>
-                    </div>
-                    <div className="settings__range">
-                      <input
-                        id="settings-voice-rate"
-                        type="range"
-                        min={0.5}
-                        max={2}
-                        step={0.1}
-                        value={settings.voiceRate}
-                        aria-describedby="settings-voice-rate-desc"
-                        aria-valuetext={`${settings.voiceRate.toFixed(1)} times`}
-                        disabled={!settings.voiceEnabled}
-                        onChange={(e) => update({ voiceRate: Number(e.target.value) })}
-                      />
-                      <span className="chip settings__range-value">
-                        {settings.voiceRate.toFixed(1)}×
-                      </span>
-                    </div>
+                <div className="settings__row settings__row--stack">
+                  <label className="settings__row-label" htmlFor="settings-voice-rate">
+                    Voice speed
+                  </label>
+                  <div className="settings__range">
+                    <input
+                      id="settings-voice-rate"
+                      type="range"
+                      min={0.5}
+                      max={2}
+                      step={0.1}
+                      value={settings.voiceRate}
+                      aria-valuetext={`${settings.voiceRate.toFixed(1)} times`}
+                      disabled={!settings.voiceEnabled}
+                      onChange={(e) => update({ voiceRate: Number(e.target.value) })}
+                    />
+                    <span className="settings__range-value">
+                      {settings.voiceRate.toFixed(1)}×
+                    </span>
                   </div>
+                </div>
+              </section>
+            </div>
 
-                  <p className="settings__hint">
-                    Voice-only mode: enable Voice coach and use the 🎤 Hands-free button on the
-                    Solve page.
-                  </p>
-                </section>
-              </div>
-            </motion.div>
+            <p className="settings__hint">
+              Hands-free? Turn on the voice coach, then hit 🎤 on the Solve page.
+            </p>
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </>
+    </div>
   );
 }

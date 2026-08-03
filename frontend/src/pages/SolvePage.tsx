@@ -2,14 +2,14 @@
  * SolvePage — the guided coaching experience.
  *
  * Left: live 3D cube that animates the current move.
- * Right: a plain-language step coach (no notation), with reason, arrow, progress
- * and hands-free voice control. Beginner Mode is the whole point: the user is
- * told what to do, why, and which way to turn — one move at a time.
+ * Right: a plain-language step coach (no notation), with reason, arrow, phase
+ * progress and hands-free voice control. Beginner Mode is the whole point: the
+ * user is told what to do, why, and which way to turn — one move at a time.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Cube3D from '../components/Cube3D';
 import { useStore } from '../state/store';
 import { SOLVED_STATE } from '../core/cube';
@@ -63,6 +63,26 @@ export default function SolvePage() {
     return steps[cursor].before;
   }, [steps, cursor, finished]);
 
+  /** One entry per solve phase, with where it starts and how long it runs. */
+  const phases = useMemo(() => {
+    const out: { index: number; title: string; goal: string; start: number; count: number }[] = [];
+    steps.forEach((s, i) => {
+      const last = out[out.length - 1];
+      if (last && last.index === s.phaseIndex) {
+        last.count += 1;
+      } else {
+        out.push({
+          index: s.phaseIndex,
+          title: s.phaseTitle,
+          goal: s.phaseGoal,
+          start: i,
+          count: 1,
+        });
+      }
+    });
+    return out;
+  }, [steps]);
+
   const advance = useCallback(() => {
     if (!current || activeMove) return;
     setActiveMove(current.move);
@@ -112,10 +132,14 @@ export default function SolvePage() {
           if (current) speak(current.phaseReason, { rate: settings.voiceRate });
           break;
         case 'slower':
-          useStore.getState().updateSettings({ voiceRate: Math.max(0.5, settings.voiceRate - 0.2) });
+          useStore
+            .getState()
+            .updateSettings({ voiceRate: Math.max(0.5, settings.voiceRate - 0.2) });
           break;
         case 'faster':
-          useStore.getState().updateSettings({ voiceRate: Math.min(2, settings.voiceRate + 0.2) });
+          useStore
+            .getState()
+            .updateSettings({ voiceRate: Math.min(2, settings.voiceRate + 0.2) });
           break;
         case 'pause':
           stopSpeaking();
@@ -173,15 +197,23 @@ export default function SolvePage() {
   if (!solution || !steps.length) {
     return (
       <div className="container solve-empty">
-        <div className="glass solve-empty__card">
-          <h1 className="page-title">Ready to be coached?</h1>
-          <p className="page-sub">
+        <motion.div
+          className="glass solve-empty__card"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <span className="solve-empty__glyph" aria-hidden>
+            🧊
+          </span>
+          <h1 className="page-title gradient-text">Ready to be coached?</h1>
+          <p className="solve-empty__text">
             Scan your real cube, or try a sample scramble to see how the step-by-step
             coaching works — no cube notation required.
           </p>
           <div className="solve-empty__actions">
             <Link to="/scan" className="btn btn-primary">
-              Scan my cube
+              📷 Scan my cube
             </Link>
             <button
               className="btn"
@@ -190,31 +222,36 @@ export default function SolvePage() {
                 generateSolution();
               }}
             >
-              Try a sample scramble
+              ▶ Try a sample scramble
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
-  const progress = finished ? 1 : cursor / steps.length;
+  const done = finished ? steps.length : cursor;
+  const progress = done / steps.length;
 
   return (
     <div className="container solve">
       {/* LEFT — 3D cube */}
       <section className="solve__stage glass">
-        <Cube3D
-          state={displayState}
-          activeMove={activeMove}
-          onMoveDone={handleMoveDone}
-          colorblind={settings.colorblind}
-          highlightFace={current?.instruction.face ?? null}
-          reducedMotion={settings.reducedMotion}
-          height={460}
-        />
+        <div className="solve__stage-inner">
+          <Cube3D
+            state={displayState}
+            activeMove={activeMove}
+            onMoveDone={handleMoveDone}
+            colorblind={settings.colorblind}
+            highlightFace={current?.instruction.face ?? null}
+            reducedMotion={settings.reducedMotion}
+            height={460}
+          />
+        </div>
         <div className="solve__stage-meta">
-          <span className="chip">{solution.moves.length} moves total</span>
+          <span className="chip">
+            <strong>{solution.moves.length}</strong> moves
+          </span>
           <span className="chip">~{Math.round(estimate / 60) || 1} min</span>
           <span className="chip">{difficulty}</span>
         </div>
@@ -222,89 +259,140 @@ export default function SolvePage() {
 
       {/* RIGHT — coach */}
       <section className="solve__coach">
-        <div className="solve__progress" aria-hidden>
-          <div className="solve__progress-bar" style={{ width: `${progress * 100}%` }} />
+        {/* progress */}
+        <div className="glass solve__progress-card">
+          <div className="solve__progress-head">
+            <span className="solve__progress-count">
+              <strong>{done}</strong> of {steps.length} moves
+            </span>
+            <span className="solve__progress-pct">{Math.round(progress * 100)}%</span>
+          </div>
+          <div className="solve__progress" role="progressbar" aria-valuenow={done} aria-valuemin={0} aria-valuemax={steps.length}>
+            <motion.div
+              className="solve__progress-bar"
+              animate={{ width: `${progress * 100}%` }}
+              transition={{ duration: settings.reducedMotion ? 0 : 0.35, ease: 'easeOut' }}
+            />
+          </div>
+          <ol className="solve__phases">
+            {phases.map((p) => {
+              const state =
+                finished || cursor >= p.start + p.count
+                  ? 'is-done'
+                  : cursor >= p.start
+                    ? 'is-current'
+                    : '';
+              return (
+                <li key={`${p.index}-${p.start}`} className={'solve__phase-pip ' + state}>
+                  <span className="solve__phase-dot" aria-hidden />
+                  <span className="solve__phase-label">{p.title}</span>
+                </li>
+              );
+            })}
+          </ol>
         </div>
 
-        {finished ? (
-          <motion.div
-            className="glass solve__done"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-          >
-            <div className="solve__done-emoji" aria-hidden>
-              🎉
-            </div>
-            <h2>Cube solved!</h2>
-            <p>You earned +120 XP. Every face is one solid color — beautifully done.</p>
-            <div className="solve__done-actions">
-              <button className="btn btn-primary" onClick={() => goToStep(0)}>
-                Replay steps
-              </button>
-              <Link to="/scan" className="btn">
-                Solve another
-              </Link>
-            </div>
-          </motion.div>
-        ) : (
-          current && (
+        <AnimatePresence mode="wait">
+          {finished ? (
             <motion.div
-              key={cursor}
-              className="glass solve__card"
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.22 }}
+              key="done"
+              className="glass solve__done"
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: settings.reducedMotion ? 0 : 0.4 }}
             >
-              <div className="solve__step-head">
-                <span className="solve__phase">{current.phaseTitle}</span>
-                <span className="solve__count">
-                  Step {current.number} of {current.total}
-                </span>
+              <div className="solve__done-emoji" aria-hidden>
+                🎉
               </div>
-
-              <div className="solve__instruction">
-                <span
-                  className="solve__arrow"
-                  style={{ background: current.instruction.faceColor }}
-                  aria-hidden
-                >
-                  {ARROW_GLYPH[current.instruction.arrow]}
-                </span>
-                <p className="solve__text">{current.instruction.text}</p>
-              </div>
-
-              <p className="solve__reason">
-                <strong>Why:</strong> {current.phaseReason}
-              </p>
-
-              <div className="solve__controls">
-                <button className="btn" onClick={prevStep} disabled={cursor === 0}>
-                  ← Back
+              <h2>Cube solved!</h2>
+              <p>You earned +120 XP. Every face is one solid color — beautifully done.</p>
+              <div className="solve__done-actions">
+                <button className="btn btn-primary" onClick={() => goToStep(0)}>
+                  Replay steps
                 </button>
-                <button className="btn btn-primary solve__next" onClick={advance} disabled={!!activeMove}>
-                  {activeMove ? 'Turning…' : 'I did it →'}
-                </button>
+                <Link to="/scan" className="btn">
+                  Solve another
+                </Link>
               </div>
-
-              <p className="solve__hint">{encouragement(cursor)}</p>
             </motion.div>
-          )
-        )}
+          ) : (
+            current && (
+              <motion.div
+                key={cursor}
+                className="glass solve__card"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: settings.reducedMotion ? 0 : 0.22 }}
+              >
+                <div className="solve__step-head">
+                  <span className="solve__phase">{current.phaseTitle}</span>
+                  <span className="solve__count">
+                    Step {current.number} / {current.total}
+                  </span>
+                </div>
+
+                <div className="solve__instruction">
+                  <span
+                    className="solve__arrow"
+                    style={{ background: current.instruction.faceColor }}
+                    aria-hidden
+                  >
+                    {ARROW_GLYPH[current.instruction.arrow]}
+                  </span>
+                  <p className="solve__text">{current.instruction.text}</p>
+                </div>
+
+                <p className="solve__reason">
+                  <span className="solve__reason-tag">Why</span>
+                  {current.phaseReason}
+                </p>
+
+                <div className="solve__controls">
+                  <button className="btn" onClick={prevStep} disabled={cursor === 0}>
+                    ← Back
+                  </button>
+                  <button
+                    className="btn btn-primary solve__next"
+                    onClick={advance}
+                    disabled={!!activeMove}
+                  >
+                    {activeMove ? 'Turning…' : 'I did it →'}
+                  </button>
+                </div>
+
+                <p className="solve__hint">{encouragement(cursor)}</p>
+              </motion.div>
+            )
+          )}
+        </AnimatePresence>
 
         {/* voice controls */}
         <div className="glass solve__voice">
-          <label className="solve__voice-row">
-            <span>Voice coach</span>
-            <input
-              type="checkbox"
-              checked={settings.voiceEnabled}
-              onChange={(e) => useStore.getState().updateSettings({ voiceEnabled: e.target.checked })}
-            />
-          </label>
+          <div className="solve__voice-row">
+            <span className="solve__voice-title">
+              Voice coach
+              <small>{settings.voiceEnabled ? 'reading each step aloud' : 'muted'}</small>
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={settings.voiceEnabled}
+              aria-label="Voice coach"
+              className={'solve__switch' + (settings.voiceEnabled ? ' is-on' : '')}
+              onClick={() =>
+                useStore.getState().updateSettings({ voiceEnabled: !settings.voiceEnabled })
+              }
+            >
+              <span className="solve__switch-thumb" aria-hidden />
+            </button>
+          </div>
           <div className="solve__voice-actions">
             <button
               className="btn btn-ghost"
-              onClick={() => current && speak(current.instruction.voice, { rate: settings.voiceRate })}
+              onClick={() =>
+                current && speak(current.instruction.voice, { rate: settings.voiceRate })
+              }
               disabled={!ttsSupported() || !current}
             >
               🔊 Repeat
@@ -326,8 +414,11 @@ export default function SolvePage() {
             )}
           </div>
           {!ttsSupported() && (
-            <p className="solve__voice-note">Voice isn't supported in this browser.</p>
+            <p className="solve__voice-note">Voice isn&apos;t supported in this browser.</p>
           )}
+          <p className="solve__keys">
+            <kbd>Space</kbd> next · <kbd>←</kbd> back · <kbd>R</kbd> repeat
+          </p>
         </div>
       </section>
     </div>
