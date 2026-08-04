@@ -8,7 +8,6 @@
 import type { Solution } from '../core/solver';
 import { PHASE_REASON, toPlain, type PlainInstruction } from '../core/notation';
 import { applyMove, type MoveName } from '../core/moves';
-
 export interface GuidedStep {
   /** 1-based position across the whole solve. */
   number: number;
