@@ -25,7 +25,6 @@ export interface GuidedStep {
   /** Cube facelet state AFTER this move is performed. */
   after: string[];
 }
-
 export function buildGuidedSteps(
   solution: Solution,
   initial: string[],
