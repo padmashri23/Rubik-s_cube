@@ -7,7 +7,6 @@
  * Everything degrades gracefully: if the API is missing, speak() is a no-op
  * and listening reports `supported: false` so the UI can hide the mic.
  */
-
 export type VoiceCommand =
   | 'next'
   | 'back'
