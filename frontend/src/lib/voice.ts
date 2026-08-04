@@ -16,7 +16,6 @@ export type VoiceCommand =
   | 'faster'
   | 'pause'
   | 'resume';
-
 const COMMAND_PATTERNS: { command: VoiceCommand; words: string[] }[] = [
   { command: 'next', words: ['next', 'done', 'continue', 'okay next', 'go on'] },
   { command: 'back', words: ['back', 'previous', 'go back', 'undo'] },
