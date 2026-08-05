@@ -14,11 +14,9 @@
   gap: 28px;
   margin-bottom: 24px;
 }
-
 .scan__title {
   margin-bottom: 6px;
 }
-
 .scan__sub {
   color: var(--text-dim);
   max-width: 62ch;
