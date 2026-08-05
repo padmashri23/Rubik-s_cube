@@ -20,7 +20,6 @@
   color: var(--text-dim);
   max-width: 62ch;
 }
-
 .scan__progress {
   flex: 0 0 auto;
   display: flex;
