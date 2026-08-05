@@ -117,7 +117,6 @@ function Section({
     </motion.section>
   );
 }
-
 export default function LandingPage() {
   const colorblind = useStore((s) => s.settings.colorblind);
   const hero = useMemo(() => scramble(18, 7).state, []);
