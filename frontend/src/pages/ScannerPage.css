@@ -2,11 +2,9 @@
    ScannerPage — guided capture.
    Camera on the left, review + full-cube editor stacked on the right.
    ========================================================================== */
-
 .scan {
   padding-bottom: 40px;
 }
-
 /* ---- header -------------------------------------------------------------- */
 
 .scan__head {
