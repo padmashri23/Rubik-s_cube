@@ -35,7 +35,6 @@ app.get('/', (_req, res) => {
 });
 app.use('/api', healthRouter);
 app.use('/api', solveRouter);
-
 // 404 + error handlers.
 app.use((_req, res) => res.status(404).json({ ok: false, error: 'Not found' }));
 app.use(
