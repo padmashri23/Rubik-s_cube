@@ -33,7 +33,6 @@ app.get('/', (_req, res) => {
     endpoints: ['GET /api/health', 'GET /api/scramble?n=22', 'POST /api/solve'],
   });
 });
-
 app.use('/api', healthRouter);
 app.use('/api', solveRouter);
 
