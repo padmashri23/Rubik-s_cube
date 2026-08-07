@@ -11,12 +11,10 @@
  * ready to grow: add routes/ for auth, user stats, leaderboards, etc., and wire
  * a database (e.g. PostgreSQL) behind a thin data layer.
  */
-
 import express from 'express';
 import cors from 'cors';
 import healthRouter from './routes/health';
 import solveRouter from './routes/solve';
-
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
 
