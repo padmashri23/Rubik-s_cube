@@ -4,7 +4,6 @@
  * marked as learned and completion is persisted to localStorage so a returning
  * beginner picks up where they left off.
  */
-
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -12,7 +11,6 @@ import Cube3D from '../components/Cube3D';
 import { SOLVED_STATE } from '../core/cube';
 import { useStore } from '../state/store';
 import './LearnPage.css';
-
 interface Lesson {
   id: string;
   title: string;
@@ -21,7 +19,6 @@ interface Lesson {
   keyIdea: string;
   tips: string[];
 }
-
 const LESSONS: Lesson[] = [
   {
     id: 'basics',
