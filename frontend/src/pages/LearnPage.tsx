@@ -294,7 +294,6 @@ export default function LearnPage() {
           );
         })}
       </ol>
-
       <footer className="learn__cta glass">
         <div>
           <h2 className="learn__cta-title">Know the method? Put it to work.</h2>
