@@ -132,7 +132,6 @@ function loadCompletion(): Completion {
     return {};
   }
 }
-
 function saveCompletion(value: Completion): void {
   if (typeof localStorage === 'undefined') return;
   try {
