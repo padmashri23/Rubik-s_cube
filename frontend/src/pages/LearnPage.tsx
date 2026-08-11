@@ -179,7 +179,6 @@ export default function LearnPage() {
           just you and the cube. Mark each lesson as learned to track your progress.
         </p>
       </header>
-
       <section className="learn__progress glass" aria-label="Learning progress">
         <div className="learn__progress-top">
           <span className="learn__progress-label">
