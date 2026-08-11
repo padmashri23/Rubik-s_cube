@@ -141,7 +141,6 @@ function saveCompletion(value: Completion): void {
     /* ignore quota / private mode */
   }
 }
-
 export default function LearnPage() {
   const colorblind = useStore((s) => s.settings.colorblind);
   const reducedMotion = useStore((s) => s.settings.reducedMotion);
