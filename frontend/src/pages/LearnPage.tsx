@@ -261,13 +261,12 @@ export default function LearnPage() {
                             center.
                           </p>
                         </div>
-                      )}
-
+                      )
+                      }
                       <div className="learn__callout">
                         <span className="learn__callout-label">Key idea</span>
                         <p>{lesson.keyIdea}</p>
                       </div>
-
                       <ul className="learn__tips">
                         {lesson.tips.map((tip) => (
                           <li key={tip}>{tip}</li>
