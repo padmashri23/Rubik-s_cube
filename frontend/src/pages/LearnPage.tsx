@@ -151,7 +151,6 @@ export default function LearnPage() {
   useEffect(() => {
     setDone(loadCompletion());
   }, []);
-
   const completedCount = useMemo(
     () => LESSONS.reduce((n, l) => n + (done[l.id] ? 1 : 0), 0),
     [done],
