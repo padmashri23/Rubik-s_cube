@@ -9,7 +9,6 @@ import LearnPage from './pages/LearnPage';
 import DashboardPage from './pages/DashboardPage';
 import SettingsButton from './components/SettingsButton';
 import ErrorBoundary from './components/ErrorBoundary';
-
 /** Sync accessibility settings to <html data-*> so global.css can react. */
 function useApplySettings() {
   const { largeText, reducedMotion } = useStore((s) => s.settings);
