@@ -24,7 +24,6 @@ const NAV = [
   { to: '/learn', label: 'Learn' },
   { to: '/dashboard', label: 'Progress' },
 ];
-
 function Header() {
   return (
     <header className="app-header">
