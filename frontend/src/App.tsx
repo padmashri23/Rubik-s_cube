@@ -18,7 +18,6 @@ function useApplySettings() {
     el.dataset.reducedMotion = String(reducedMotion);
   }, [largeText, reducedMotion]);
 }
-
 const NAV = [
   { to: '/scan', label: 'Scan' },
   { to: '/solve', label: 'Solve' },
