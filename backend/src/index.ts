@@ -5,7 +5,7 @@
  *   GET  /api/health          liveness probe
  *   GET  /api/scramble        a random solvable cube (for demos/testing)
  *   POST /api/solve           validate + solve a cube, with plain-language steps
- *
+ 
  * It reuses the shared cube engine (see src/engine.ts) so the server and the web
  * client always agree on what is solvable and how to solve it. The structure is
  * ready to grow: add routes/ for auth, user stats, leaderboards, etc., and wire
