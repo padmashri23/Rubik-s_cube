@@ -30,5 +30,4 @@ export {
   PHASE_REASON,
   type PlainInstruction,
 } from '../../frontend/src/core/notation';
-
 export type { MoveName } from '../../frontend/src/core/moves';
