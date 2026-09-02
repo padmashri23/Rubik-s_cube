@@ -9,5 +9,4 @@ router.get('/health', (_req: Request, res: Response) => {
     uptime: process.uptime(),
   });
 });
-
 export default router;
