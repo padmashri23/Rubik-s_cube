@@ -4,12 +4,10 @@
    (container, glass, btn, chip, gradient-text, page-title). Custom classes are
    prefixed `land__`.
    ========================================================================== */
-
 .land {
   padding-bottom: 40px;
 }
 /* ---- Hero ----------------------------------------------------------------- */
-
 .land__hero {
   position: relative;
   padding: 56px 0 24px;
