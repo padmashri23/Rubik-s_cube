@@ -23,7 +23,6 @@ import {
   type VoiceCommand,
 } from '../lib/voice';
 import './SolvePage.css';
-
 const ARROW_GLYPH: Record<string, string> = {
   up: '↑',
   down: '↓',
