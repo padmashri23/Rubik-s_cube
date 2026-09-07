@@ -31,7 +31,6 @@ const ARROW_GLYPH: Record<string, string> = {
   right: '→',
   rotate: '↻',
 };
-
 export default function SolvePage() {
   const steps = useStore((s) => s.steps);
   const cursor = useStore((s) => s.stepCursor);
