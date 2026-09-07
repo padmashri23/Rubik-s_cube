@@ -62,8 +62,8 @@ export default function DashboardPage() {
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 0.05, ease: 'easeOut' }}
-        >
-          <div className="dash__empty-text">
+        > 
+        <div className="dash__empty-text">
             <h2 className="dash__empty-title">Ready to begin?</h2>
             <p className="dash__empty-sub">
               You haven&apos;t solved a cube yet. Scan one and let CubeGuide AI coach you
