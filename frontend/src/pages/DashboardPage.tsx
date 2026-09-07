@@ -165,7 +165,6 @@ export default function DashboardPage() {
           })}
         </div>
       </section>
-
       <motion.section
         className="glass dash__teaser"
         aria-label="Challenge mode"
