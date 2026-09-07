@@ -6,7 +6,6 @@
  * progress and hands-free voice control. Beginner Mode is the whole point: the
  * user is told what to do, why, and which way to turn — one move at a time.
  */
-
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
